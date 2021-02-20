@@ -1,0 +1,72 @@
+@buttonColor: #01c251;
+@textColor: #293a4b;
+
+body {
+  margin: 15px;
+}
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: @textColor;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#nav {
+  padding: 30px;
+  text-align: center;
+
+  a {
+    font-weight: bold;
+    color: @textColor;
+
+    &.router-link-exact-active {
+      color: #42b983;
+    }
+  }
+}
+
+input {
+  padding: 10px 10px;
+  outline: none;
+  border-radius: 5px;
+  font-size: 14pt;
+  border: 1px solid #999999;
+  background-color: #f8f8f8;
+  color: @textColor;
+}
+
+button {
+  padding: 15px 10px;
+  font-size: 14pt;
+  //background-color: #00c752;
+  background-color: @buttonColor;
+  color: #ffffff;
+  border: none;
+  border-radius: 7px;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    background-color: #c8c8c8;
+  }
+}
+
+select {
+  padding: 15px 10px;
+  font-size: 14pt;
+  border-radius: 5px;
+  border-color: #d9d9d9;
+  background-color: #ffffff;
+
+  &:focus {
+    outline: none;
+  }
+}
