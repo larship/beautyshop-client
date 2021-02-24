@@ -1,0 +1,46 @@
+.list-screen {
+  margin: @pageMargin;
+
+  .loading {
+    text-align: center;
+  }
+
+  .location-select {
+    margin-bottom: 15px;
+  }
+
+  .location-choose-form {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    text-align: center;
+    background-color: #ffffff;
+    font-size: 14pt;
+
+    .location-item {
+      padding: 15px 10px;
+      border-bottom: 1px solid #c8c8c8;
+    }
+  }
+
+  .beautyshop-list {
+    .beautyshop {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #c8c8c8;
+      border-radius: 5px;
+
+      &--name {
+        margin-bottom: 10px;
+      }
+    }
+
+    .beautyshop + .beautyshop {
+      margin-top: 15px;
+    }
+  }
+}

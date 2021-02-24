@@ -1,8 +1,11 @@
-@buttonColor: #01c251;
-@textColor: #293a4b;
+@import 'const';
+@import 'screens/hello';
+@import 'screens/list';
+@import 'screens/checkin';
+@import 'screens/info';
 
 body {
-  margin: 15px;
+  margin: 0;
 }
 
 #app {
@@ -10,11 +13,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: @textColor;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
 }
 
 #nav {
