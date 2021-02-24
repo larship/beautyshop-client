@@ -52,13 +52,15 @@ export function checkAuth(): Promise<Client | null> {
   const sessionId = localStorage.getItem('session-id');
   const salt = localStorage.getItem('salt');
 
-  console.log('clientUuid, sessionId, salt: ' + clientUuid + ', ' + sessionId + ', ' + salt);
+  console.log('LocalStorage: clientUuid, sessionId, salt: ' + clientUuid + ', ' + sessionId + ', ' + salt);
 
   if (clientUuid == null || sessionId == null || salt == null) {
     return newClient().then((client: Client | null) => {
       if (client == null) {
         return null;
       }
+
+      console.log('Created Client: clientUuid, sessionId, salt: ' + client.uuid + ', ' + client.sessionId + ', ' + client.salt);
 
       localStorage.setItem('client-uuid', client.uuid);
       localStorage.setItem('session-id', client.sessionId);
@@ -71,7 +73,25 @@ export function checkAuth(): Promise<Client | null> {
   return authClient(clientUuid, sessionId, salt);
 }
 
-export function setClientData(phone: string, name: string): void {
-  localStorage.setItem('phone', phone);
-  localStorage.setItem('name', name);
+export interface ClientData {
+  phone: string;
+  name: string;
+}
+
+export function getClientData(): ClientData | null {
+  const phone = localStorage.getItem('phone');
+  const name = localStorage.getItem('name');
+
+  if (!phone || !name) {
+    return null;
+  }
+
+  return {phone: phone, name: name};
+}
+
+export function setClientData(clientData: ClientData): void {
+  localStorage.setItem('phone', clientData.phone);
+  localStorage.setItem('name', clientData.name);
+
+  // TODO Обновлять сущность клиента на сервере
 }
