@@ -1,5 +1,4 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import Home from '../views/Home.vue'
 import Hello from '@/components/Hello.vue';
 import List from '@/components/List.vue';
 import ApiTest from '@/components/ApiTest.vue';
@@ -9,34 +8,29 @@ import Info from '@/components/Info.vue';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/hello',
     name: 'Hello',
     component: Hello
   },
   {
     path: '/list',
-    name: 'Beauty shops list',
+    name: 'List',
     component: List
   },
   {
     path: '/check-in/:uuid',
-    name: 'Checkin page',
+    name: 'CheckIn',
     component: CheckIn,
     props: true
   },
   {
     path: '/info/:uuid',
-    name: 'Info page',
+    name: 'Info',
     component: Info,
     props: true
   },
   {
     path: '/api-test',
-    name: 'API test',
+    name: 'ApiTest',
     component: ApiTest
   },
 ]
