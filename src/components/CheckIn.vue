@@ -3,6 +3,9 @@
     <div @click="showBeautishopInfo(currentBeautyshop)">
       Информация о салоне {{ currentBeautyshop.name }} &gt;&gt;&gt;
     </div>
+    <div @click="showBeautishopInfo(currentBeautyshop)">
+      Записать другого человека &gt;&gt;&gt;
+    </div>
     <div class="data-choose-row">
       <div class="data-choose-row--title">Мастер:</div>
       <select v-model="workerUuid">
