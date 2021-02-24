@@ -1,22 +1,21 @@
 <template>
   <div class="hello-screen">
-    <template v-if="currentShowState === ShowState.phone">
+    <div v-if="currentShowState === ShowState.phone">
       <div class="input-title">Ваш телефон:</div>
-      <div class="input-container input-container__two-rows">
+      <template class="input-container input-container__two-rows">
         <span>+7</span>
         <input
             v-bind:value="phoneNumber"
             v-on:input="phoneNumber = $event.target.value"
-            v-bind:class="{'input-wrong': phoneNumber.length !== 15}"
             @input="phoneNumberChange()"
             type="text"
             placeholder="(XXX) XXX-XX-XX"
             maxlength="15"
         />
-      </div>
+      </template>
       <button @click="nextStep()" v-bind:disabled="phoneNumber.length !== 15">Далее</button>
-    </template>
-    <template v-if="currentShowState === ShowState.name" class="342">
+    </div>
+    <template v-if="currentShowState === ShowState.name">
       <div class="input-title">Как к вам обращаться?</div>
       <div class="input-container">
         <input
@@ -28,13 +27,16 @@
       </div>
       <button @click="nextStep()" v-bind:disabled="name.trim().length < 3">Далее</button>
     </template>
+    <div class="user-agreement-info">
+      Нажимая на кнопку "Далее", вы принимаете "Пользовательское соглашение"
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import router from '@/router';
-import { setClientData } from '@/auth';
+import { checkAuth, ClientData, setClientData, getClientData } from '@/auth';
 
 enum ShowState {
   phone = 1,
@@ -69,13 +71,24 @@ export default defineComponent({
 
         case ShowState.name:
           setClientData(
-              '7' + phoneNumber.value.replace(/\D/g, ''),
-              name.value.replace(/[^а-яА-Яa-zA-Z ]/g, '')
+              {
+                phone: '7' + phoneNumber.value.replace(/\D/g, ''),
+                name: name.value.replace(/[^а-яА-Яa-zA-Z ]/g, '')
+              }
           );
           router.push('/list');
           break;
       }
     }
+
+    checkAuth().then(() => {
+      const clientData: ClientData | null = getClientData();
+
+      if (clientData) {
+        // В этом случае экран приветствия не нужен, сразу перебросим на список
+        router.push('/list');
+      }
+    });
 
     return {
       ShowState,

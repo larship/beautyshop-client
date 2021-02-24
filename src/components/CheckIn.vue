@@ -47,8 +47,8 @@
       </div>
     </div>
     <div class="check-in-buttons">
-      <button @click="checkIn(); showAddScheduleItemDialog = false">Записаться</button>
-      <button @click="showAddScheduleItemDialog = false">Закрыть</button>
+      <button @click="checkIn()">Записаться</button>
+      <button @click="goToList()">Назад</button>
     </div>
   </div>
 </template>
@@ -72,38 +72,9 @@ export default defineComponent({
     const currentBeautyshop = ref<object>([]);
     const workersList = ref<object>([]);
 
-    // checkAuth().then((client: Client|null) => {
-    //     console.log(client);
-    //   });
-
-    // const fetchData = (url: string) => {
-    //   isLoading.value = true;
-    //
-    //   return fetch(url,  {
-    //     method: 'GET',
-    //     headers: {
-    //       'content-type': 'application/json',
-    //     },
-    //   }).then(res => {
-    //     console.log(res);
-    //     isLoading.value = false;
-    //
-    //     if (!res.ok) {
-    //       // loadedData.value = 'Произошла ошибка: ' + res.json()
-    //     }
-    //
-    //     return res.json();
-    //   }).then(json => {
-    //     // loadedData.value = JSON.stringify(json);
-    //     return json;
-    //   });
-    // }
-
-    // fetchData(Config.BACKEND_URL + '/beautyshops?city=' + city).then(beautyshops => {
-    //   beautyshopsList.value = beautyshops;
-    //   // currentBeautyshop.value = beautyshops[0].value;
-    //   console.log('beautyshopsList:', beautyshopsList);
-    // })
+    const goToList = () => {
+      router.push('/list');
+    }
 
     getBeautyshop(props.uuid).then((beautyshop: Beautyshop | null) => {
       if (!beautyshop) {
@@ -143,11 +114,12 @@ export default defineComponent({
       beautyshopsList,
       isLoading,
       currentBeautyshop,
-      showBeautishopInfo,
       beautyshopUuid,
       workerUuid,
       serviceTypeUuid,
       workersList,
+      showBeautishopInfo,
+      goToList,
     }
   }
 })
