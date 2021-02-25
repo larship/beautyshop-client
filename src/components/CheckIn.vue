@@ -28,23 +28,11 @@
     </div>
     <div class="data-choose-row">
       <div class="data-choose-row--title">Дата:</div>
-      <div class="date-chooser">
-        <div>&#9668;</div>
-        <div>
-          17 февраля
-        </div>
-        <div>&#9658;</div>
-      </div>
+      <DateChooser @dateChange="onDateChange"></DateChooser>
     </div>
     <div class="data-choose-row">
       <div class="data-choose-row--title">Время:</div>
-      <div class="time-chooser">
-        <span>09:00</span>
-        <span>10:00</span>
-        <span>11:00</span>
-        <span>13:30</span>
-        <span>14:30</span>
-      </div>
+      <TimeChooser @timeChange="onTimeChange"></TimeChooser>
     </div>
     <div class="check-in-buttons">
       <button @click="checkIn()">Записаться</button>
@@ -57,13 +45,14 @@
 import { ref, defineComponent } from 'vue';
 import Beautyshop from '@/models/Beautyshop';
 import { getBeautyshop } from '@/models';
-import { getLocation } from '@/location';
 import router from '@/router';
+import DateChooser from '@/components/DateChooser.vue';
+import TimeChooser from '@/components/TimeChooser.vue';
 
 export default defineComponent({
+  components: {TimeChooser, DateChooser},
   props: ['uuid'],
   setup(props) {
-    const city = getLocation();
     const isLoading = ref<boolean>(false);
     const beautyshopUuid = ref<string>('');
     const workerUuid = ref<string>('');
@@ -86,7 +75,6 @@ export default defineComponent({
     });
 
     const showBeautishopInfo = (beautyshop: Beautyshop) => {
-      console.log('showBeautishopInfo');
       router.push('/info/' + beautyshop.uuid);
     }
 
@@ -110,6 +98,14 @@ export default defineComponent({
     //   });
     // }
 
+    const onDateChange = (currentDate: Date) => {
+      console.log('onDateChange in CheckIn component', currentDate);
+    }
+
+    const onTimeChange = (currentTime: string) => {
+      console.log('onTimeChange in CheckIn component', currentTime);
+    }
+
     return {
       beautyshopsList,
       isLoading,
@@ -118,10 +114,11 @@ export default defineComponent({
       workerUuid,
       serviceTypeUuid,
       workersList,
+      onDateChange,
+      onTimeChange,
       showBeautishopInfo,
       goToList,
     }
   }
 })
 </script>
-

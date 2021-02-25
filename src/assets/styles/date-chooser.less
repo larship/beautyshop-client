@@ -1,0 +1,22 @@
+.date-chooser {
+  display: grid;
+  grid-template-columns: 1fr minmax(150px, 200px) 1fr;
+  justify-items: center;
+  font-size: 16pt;
+
+  .date-chooser--arrow {
+    width: 15px;
+    height: 23px;
+    background-size: contain;
+
+    &__left {
+      justify-self: end;
+      background-image: url("~@/assets/images/arrow-left.svg");
+    }
+
+    &__right {
+      justify-self: start;
+      background-image: url("~@/assets/images/arrow-right.svg");
+    }
+  }
+}
