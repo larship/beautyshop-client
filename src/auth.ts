@@ -1,6 +1,19 @@
 import Client from '@/models/Client';
 import { Config } from '@/config';
 
+export interface ClientData {
+  phone: string;
+  name: string;
+}
+
+export interface ExtendedClientData {
+  phone: string;
+  name: string;
+  clientUuid: string;
+  sessionId: string;
+  salt: string;
+}
+
 function authClient(clientUuid: string, sessionId: string, salt: string): Promise<Client | null> {
   const data: FormData = new FormData();
   data.append('clientUuid', clientUuid);
@@ -73,11 +86,6 @@ export function checkAuth(): Promise<Client | null> {
   return authClient(clientUuid, sessionId, salt);
 }
 
-export interface ClientData {
-  phone: string;
-  name: string;
-}
-
 export function getClientData(): ClientData | null {
   const phone = localStorage.getItem('phone');
   const name = localStorage.getItem('name');
@@ -94,4 +102,20 @@ export function setClientData(clientData: ClientData): void {
   localStorage.setItem('name', clientData.name);
 
   // TODO Обновлять сущность клиента на сервере
+}
+
+export function getClientDataExtended(): ExtendedClientData | null {
+  // TODO Подумать над объединением ClientData и ExtendedClientData. ClientData выглядит ненужным
+
+  const clientUuid = localStorage.getItem('client-uuid');
+  const sessionId = localStorage.getItem('session-id');
+  const salt = localStorage.getItem('salt');
+  const phone = localStorage.getItem('phone');
+  const name = localStorage.getItem('name');
+
+  if (!clientUuid || !sessionId || !salt || !phone || !name) {
+    return null;
+  }
+
+  return {clientUuid, sessionId, salt, phone, name};
 }

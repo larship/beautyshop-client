@@ -36,7 +36,8 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import router from '@/router';
-import { checkAuth, ClientData, setClientData, getClientData } from '@/auth';
+import { checkAuth, setClientData, getClientData } from '@/auth';
+import Client from '@/models/Client';
 
 enum ShowState {
   phone = 1,
@@ -81,10 +82,8 @@ export default defineComponent({
       }
     }
 
-    checkAuth().then(() => {
-      const clientData: ClientData | null = getClientData();
-
-      if (clientData) {
+    checkAuth().then((client: Client | null) => {
+      if (client && getClientData()) {
         // В этом случае экран приветствия не нужен, сразу перебросим на список
         router.push('/list');
       }

@@ -8,10 +8,6 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
-import { getBeautyshops, getWorkers, getServiceTypes } from '@/models';
-import Beautyshop from '@/models/Beautyshop';
-import Worker from '@/models/Worker';
-import ServiceType from '@/models/ServiceType';
 
 export default defineComponent({
   emits: ['dateChange'],

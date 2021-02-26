@@ -1,7 +1,11 @@
 <template>
   <div class="check-in-screen">
     <div @click="showBeautishopInfo(currentBeautyshop)">
-      Информация о салоне {{ currentBeautyshop.name }} &gt;&gt;&gt;
+      Если есть запись запись в этот салон - показывать здесь плашкой сверху, выше всего остального<br>
+      Также можно показывать в списке
+    </div>
+    <div @click="showBeautishopInfo(currentBeautyshop)">
+      Информация о салоне {{ currentBeautyshop?.name }} &gt;&gt;&gt;
     </div>
     <div @click="showBeautishopInfo(currentBeautyshop)">
       Записать другого человека &gt;&gt;&gt;
@@ -9,7 +13,7 @@
     <div class="data-choose-row">
       <div class="data-choose-row--title">Мастер:</div>
       <select v-model="workerUuid">
-        <option v-for="worker in currentBeautyshop.workers" v-bind:value="worker.uuid" v-bind:key="worker.uuid">
+        <option v-for="worker in currentBeautyshop?.workers" v-bind:value="worker.uuid" v-bind:key="worker.uuid">
           {{ worker.fullName }}
         </option>
       </select>
@@ -17,7 +21,7 @@
     <div class="data-choose-row">
       <div class="data-choose-row--title">Услуга:</div>
       <select v-model="serviceTypeUuid">
-        <template v-for="worker in currentBeautyshop.workers">
+        <template v-for="worker in currentBeautyshop?.workers">
           <template v-if="workerUuid === worker.uuid">
             <option v-for="serviceType in worker.services" v-bind:value="serviceType.uuid"
                     v-bind:key="serviceType.uuid">{{ serviceType.name }}
@@ -44,22 +48,24 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import Beautyshop from '@/models/Beautyshop';
-import { getBeautyshop } from '@/models';
+import { getBeautyshop, createCheckIn } from '@/models';
 import router from '@/router';
 import DateChooser from '@/components/DateChooser.vue';
 import TimeChooser from '@/components/TimeChooser.vue';
+import { ExtendedClientData, getClientDataExtended } from '@/auth';
 
 export default defineComponent({
   components: {TimeChooser, DateChooser},
   props: ['uuid'],
   setup(props) {
     const isLoading = ref<boolean>(false);
-    const beautyshopUuid = ref<string>('');
     const workerUuid = ref<string>('');
     const serviceTypeUuid = ref<string>('');
     const beautyshopsList = ref<object[]>([]);
-    const currentBeautyshop = ref<object>([]);
+    const currentBeautyshop = ref<Beautyshop | null>(null);
     const workersList = ref<object>([]);
+
+    let checkInDate: Date = new Date();
 
     const goToList = () => {
       router.push('/list');
@@ -78,45 +84,46 @@ export default defineComponent({
       router.push('/info/' + beautyshop.uuid);
     }
 
-    // const checkIn = () => {
-    //   fetch(Config.BACKEND_URL + '/check-in?beautyshop=73b00c6d-a503-46b2-ae50-2bf609a82973',  {
-    //     method: 'GET',
-    //     headers: {
-    //       'content-type': 'application/json',
-    //     },
-    //   }).then(res => {
-    //     console.log(res);
-    //     // isLoading.value = false;
-    //
-    //     if (!res.ok) {
-    //       // loadedData.value = 'Произошла ошибка: ' + res.json()
-    //     }
-    //
-    //     return res.json();
-    //   }).then(json => {
-    //     // loadedData.value = JSON.stringify(json);
-    //   });
-    // }
-
     const onDateChange = (currentDate: Date) => {
-      console.log('onDateChange in CheckIn component', currentDate);
+      checkInDate = currentDate;
+
+      console.log('checkInDate update: ', checkInDate);
     }
 
     const onTimeChange = (currentTime: string) => {
-      console.log('onTimeChange in CheckIn component', currentTime);
+      let timeBlocks = currentTime.split(':');
+      checkInDate.setHours(+timeBlocks[0], +timeBlocks[1], 0, 0);
+
+      console.log('checkInDate update: ', checkInDate);
+    }
+
+    const checkIn = () => {
+      let clientDataEx: ExtendedClientData | null = getClientDataExtended();
+
+      if (!clientDataEx) {
+        console.log('Не смогли получить информацию о клиента');
+        return;
+      }
+
+      if (!currentBeautyshop.value) {
+        console.log('Не была получена информация о салоне красоты');
+        return;
+      }
+
+      createCheckIn(currentBeautyshop.value.uuid, clientDataEx.clientUuid, workerUuid.value, serviceTypeUuid.value, checkInDate);
     }
 
     return {
       beautyshopsList,
       isLoading,
       currentBeautyshop,
-      beautyshopUuid,
       workerUuid,
       serviceTypeUuid,
       workersList,
       onDateChange,
       onTimeChange,
       showBeautishopInfo,
+      checkIn,
       goToList,
     }
   }
