@@ -11,7 +11,11 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+//    "declaration": true,
     "baseUrl": ".",
+//    "typeRoots": [
+//      "./src/declarations"
+//    ],
     "types": [
       "webpack-env"
     ],
