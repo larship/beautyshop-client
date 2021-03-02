@@ -39,7 +39,7 @@
       <TimeChooser @timeChange="onTimeChange"></TimeChooser>
     </div>
     <div class="check-in-buttons">
-      <button @click="checkIn()">Записаться</button>
+      <button @click="checkIn()" v-bind:disabled="!workerUuid || !serviceTypeUuid || !isTimeSelected">Записаться</button>
       <button @click="goToList()">Назад</button>
     </div>
   </div>
@@ -66,6 +66,7 @@ export default defineComponent({
     const workersList = ref<object>([]);
 
     let checkInDate: Date = new Date();
+    let isTimeSelected = ref<boolean>(false);
 
     const goToList = () => {
       router.push('/list');
@@ -86,11 +87,13 @@ export default defineComponent({
 
     const onDateChange = (currentDate: Date) => {
       checkInDate.setFullYear(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+
       console.log('checkInDate update: ', checkInDate);
     }
 
     const onTimeChange = (currentTime: Date) => {
       checkInDate.setHours(currentTime.getHours(), currentTime.getMinutes(), 0, 0);
+      isTimeSelected.value = true;
 
       console.log('checkInDate update: ', checkInDate);
     }
@@ -118,6 +121,7 @@ export default defineComponent({
       workerUuid,
       serviceTypeUuid,
       workersList,
+      isTimeSelected,
       onDateChange,
       onTimeChange,
       showBeautishopInfo,
