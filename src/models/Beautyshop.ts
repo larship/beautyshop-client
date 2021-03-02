@@ -5,5 +5,6 @@ export default interface Beautyshop {
   city: string;
   address: string;
   name: string;
+  coordinates: number[] | null;
   workers: BeautyshopWorker[];
 }

@@ -61,13 +61,26 @@ export function getBeautyshops(city: string): Promise<Beautyshop[]> {
       return [];
     }
 
+    let coordsStr;
+    data.forEach(beautyshop => {
+      if (beautyshop.coordinates) {
+        coordsStr = beautyshop.coordinates as unknown as string;
+        beautyshop.coordinates = coordsStr.replace(/[^0-9,.]/g, '').split(',').map(entry => Number(entry));
+      }
+    });
+
     return data;
   });
 }
 
 export function getBeautyshop(uuid: string): Promise<Beautyshop | null> {
   return fetchData<Beautyshop>('/beautyshop?uuid=' + uuid).then((beautyshop: Beautyshop | null) => {
-    return beautyshop ?? null;
+    if (beautyshop && beautyshop.coordinates) {
+      let coordsStr = beautyshop.coordinates as unknown as string;
+      beautyshop.coordinates = coordsStr.replace(/[^0-9,.]/g, '').split(',').map(entry => Number(entry));
+    }
+
+    return beautyshop as Beautyshop ?? null;
   });
 }
 

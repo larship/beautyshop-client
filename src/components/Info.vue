@@ -1,10 +1,10 @@
 <template>
   <div class="info-screen">
     <div class="info-common">
-      {{ currentBeautyshop.name }}<br>
-      {{ currentBeautyshop.address }}
+      {{ currentBeautyshop?.name }}<br>
+      {{ currentBeautyshop?.address }}
     </div>
-    <div class="info-map" id="info-map"></div>
+    <div class="info-map" id="info-map" v-if="currentBeautyshop?.coordinates"></div>
     <div class="buttons-container">
       <button @click="goToCheckIn()">Назад</button>
     </div>
@@ -21,10 +21,8 @@ import router from '@/router';
 export default defineComponent({
   props: ['uuid'],
   setup(props) {
-
-
     const isLoading = ref<boolean>(false);
-    const currentBeautyshop = ref<object>([]);
+    const currentBeautyshop = ref<Beautyshop | null>(null);
     const workersList = ref<object>([]);
 
     getBeautyshop(props.uuid).then((beautyshop: Beautyshop | null) => {
@@ -34,31 +32,28 @@ export default defineComponent({
       }
 
       currentBeautyshop.value = beautyshop;
+
+      if (beautyshop.coordinates) {
+        // eslint-disable-next-line
+        ymaps.ready(function () {
+          // eslint-disable-next-line
+          let myMap: ymaps.Map = new ymaps.Map("info-map", {
+                center: beautyshop.coordinates as number[],
+                zoom: 18,
+                controls: []
+              }),
+              // eslint-disable-next-line
+              myPlacemark = new ymaps.Placemark(beautyshop.coordinates as number[], {});
+
+          // myMap.behaviors.enable('ruler');
+          myMap.geoObjects.add(myPlacemark);
+        });
+      }
     });
 
     const goToCheckIn = () => {
       router.push({name: 'CheckIn', params: {uuid: props.uuid}});
     }
-
-    // eslint-disable-next-line
-    ymaps.ready(function () {
-      // eslint-disable-next-line
-      let myMap: ymaps.Map = new ymaps.Map("info-map", {
-            center: [55.755723, 37.633670],
-            zoom: 18
-          }, {
-            searchControlProvider: 'yandex#search'
-          }),
-          // eslint-disable-next-line
-          myPlacemark = new ymaps.Placemark([55.755723, 37.633670], {
-            balloonContentHeader: "Балун метки",
-            balloonContentBody: "Содержимое <em>балуна</em> метки",
-            balloonContentFooter: "Подdвал",
-            hintContent: "Хинт метки"
-          });
-
-      myMap.geoObjects.add(myPlacemark);
-    });
 
     return {
       isLoading,

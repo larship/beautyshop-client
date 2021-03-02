@@ -7,13 +7,15 @@ declare module ymaps {
   export function ready(onFulfilled?: Function): Promise;
 
   export class Map {
-    constructor(element: string, state: MapState, data: object);
+    constructor(element: string, state: MapState, options?: object);
+
     geoObjects: GeoObjectCollection;
   }
 
   export class MapState {
     center: number[];
     zoom: number;
+    controls?: string[];
   }
 
   export class GeoObjectCollection {
@@ -21,6 +23,6 @@ declare module ymaps {
   }
 
   export class Placemark {
-    constructor(coordinates: number[], state: object);
+    constructor(coordinates: number[], properties?: object);
   }
 }
