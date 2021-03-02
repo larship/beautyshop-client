@@ -85,14 +85,12 @@ export default defineComponent({
     }
 
     const onDateChange = (currentDate: Date) => {
-      checkInDate = currentDate;
-
+      checkInDate.setFullYear(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
       console.log('checkInDate update: ', checkInDate);
     }
 
-    const onTimeChange = (currentTime: string) => {
-      let timeBlocks = currentTime.split(':');
-      checkInDate.setHours(+timeBlocks[0], +timeBlocks[1], 0, 0);
+    const onTimeChange = (currentTime: Date) => {
+      checkInDate.setHours(currentTime.getHours(), currentTime.getMinutes(), 0, 0);
 
       console.log('checkInDate update: ', checkInDate);
     }
