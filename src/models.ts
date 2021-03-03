@@ -3,7 +3,7 @@ import Worker from '@/models/Worker';
 import ServiceType from '@/models/ServiceType';
 import { Config } from '@/config';
 
-function sendData<T>(url: string, data: object): Promise<T | null> {
+export function sendData<T>(url: string, data: object): Promise<T | null> {
   return fetch(Config.BACKEND_URL + url, {
     method: 'POST',
     headers: {
@@ -21,7 +21,7 @@ function sendData<T>(url: string, data: object): Promise<T | null> {
   });
 }
 
-function fetchData<T>(url: string): Promise<T | null> {
+export function fetchData<T>(url: string): Promise<T | null> {
   return fetch(Config.BACKEND_URL + url, {
     method: 'GET',
     headers: {
@@ -38,7 +38,7 @@ function fetchData<T>(url: string): Promise<T | null> {
   });
 }
 
-function fetchDataList<T>(url: string): Promise<T[] | null> {
+export function fetchDataList<T>(url: string): Promise<T[] | null> {
   return fetch(Config.BACKEND_URL + url, {
     method: 'GET',
     headers: {
@@ -92,12 +92,3 @@ export function getServiceTypes(beautyShopUuid: string): Promise<ServiceType[] |
   return fetchDataList<ServiceType>('/service-types?beautyshopUuid=' + beautyShopUuid);
 }
 
-export function createCheckIn(beautyshopUuid: string, clientUuid: string, workerUuid: string, serviceTypeUuid: string, startDate: Date) {
-  return sendData<string>('/create-check-in', {
-    beautyshopUuid,
-    clientUuid,
-    workerUuid,
-    serviceTypeUuid,
-    startDate: Math.floor(startDate.getTime() / 1000),
-  })
-}

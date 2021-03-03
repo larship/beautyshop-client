@@ -1,7 +1,7 @@
 <template>
   <div class="check-in-screen">
-    <div @click="showBeautishopInfo(currentBeautyshop)">
-      Если есть запись запись в этот салон - показывать здесь плашкой сверху, выше всего остального<br>
+    <div v-if="!isCheckInExists" class="check-in-exists-panel">
+      Вы записаны в салон: НАЗВАНИЕ САЛОНА<br>
       Также можно показывать в списке
     </div>
     <div @click="showBeautishopInfo(currentBeautyshop)">
@@ -39,7 +39,8 @@
       <TimeChooser v-bind:selectedTimeItem="selectedTimeItem" @timeChange="onTimeChange"></TimeChooser>
     </div>
     <div class="check-in-buttons">
-      <button @click="checkIn()" v-bind:disabled="!workerUuid || !serviceTypeUuid || !isTimeSelected">Записаться</button>
+      <button @click="checkIn()" v-bind:disabled="!workerUuid || !serviceTypeUuid || !isTimeSelected">Записаться
+      </button>
       <button @click="goToList()">Назад</button>
     </div>
   </div>
@@ -48,7 +49,7 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import Beautyshop from '@/models/Beautyshop';
-import { getBeautyshop, createCheckIn } from '@/models';
+import { getBeautyshop } from '@/models';
 import router from '@/router';
 import DateChooser from '@/components/DateChooser.vue';
 import TimeChooser from '@/components/TimeChooser.vue';
@@ -118,7 +119,14 @@ export default defineComponent({
         return;
       }
 
-      createCheckIn(currentBeautyshop.value.uuid, clientDataEx.clientUuid, workerUuid.value, serviceTypeUuid.value, checkInDate);
+      createCheckIn(currentBeautyshop.value.uuid, clientDataEx.clientUuid, workerUuid.value,
+          serviceTypeUuid.value, checkInDate).then((checkInItem: CheckInItem | null) => {
+        console.log('Создана запись в салон красоты: ', checkInItem);
+
+        serviceTypeUuid.value = '';
+        workerUuid.value = '';
+        selectedTimeItem.value = '';
+      });
     }
 
     return {
