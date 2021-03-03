@@ -1,15 +1,16 @@
 <template>
   <div class="time-chooser">
     <span @click="chooseTime(time)" v-for="time in timeItems" v-bind:key="time"
-          v-bind:class="{ 'selected': selectedTimeItem === time }" class="time-chooser--item">{{ time }}</span>
+          v-bind:class="{ 'selected': selectedTimeItemInternal === time }" class="time-chooser--item">{{ time }}</span>
   </div>
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue';
+import { ref, defineComponent, watch } from 'vue';
 
 export default defineComponent({
   emits: ['timeChange'],
+  props: ['selectedTimeItem'],
   setup(props, {emit}) {
     let timeArray: string[] = [];
     let startHour = 9;
@@ -24,10 +25,17 @@ export default defineComponent({
     }
 
     let timeItems = ref<string[]>(timeArray);
-    let selectedTimeItem = ref<string>('');
+    let selectedTimeItemInternal = ref<string>('');
+
+    watch(
+        () => props.selectedTimeItem,
+        (currentTime: string) => {
+          selectedTimeItemInternal.value = currentTime;
+        }
+    )
 
     const chooseTime = (selectedItem: string) => {
-      selectedTimeItem.value = selectedItem;
+      selectedTimeItemInternal.value = selectedItem;
 
       let userDate: Date = new Date();
       let timeBlocks = selectedItem.split(':');
@@ -38,7 +46,7 @@ export default defineComponent({
 
     return {
       timeItems,
-      selectedTimeItem,
+      selectedTimeItemInternal,
       chooseTime,
     }
   }

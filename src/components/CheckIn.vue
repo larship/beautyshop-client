@@ -36,7 +36,7 @@
     </div>
     <div class="data-choose-row">
       <div class="data-choose-row--title">Время:</div>
-      <TimeChooser @timeChange="onTimeChange"></TimeChooser>
+      <TimeChooser v-bind:selectedTimeItem="selectedTimeItem" @timeChange="onTimeChange"></TimeChooser>
     </div>
     <div class="check-in-buttons">
       <button @click="checkIn()" v-bind:disabled="!workerUuid || !serviceTypeUuid || !isTimeSelected">Записаться</button>
@@ -69,6 +69,7 @@ export default defineComponent({
 
     let checkInDate: Date = new Date();
     let isTimeSelected = ref<boolean>(false);
+    let selectedTimeItem = ref<string>('');
 
     const goToList = () => {
       router.push('/list');
@@ -96,8 +97,12 @@ export default defineComponent({
     const onTimeChange = (currentTime: Date) => {
       checkInDate.setHours(currentTime.getHours(), currentTime.getMinutes(), 0, 0);
       isTimeSelected.value = true;
+      // Нужно для того, чтобы был вызов watch'а внутри TimeChooser компонента. Если не менять значение здесь, то watch
+      // не будет изменяться, т.к. нет изменений
+      selectedTimeItem.value = (currentTime.getHours() < 10 ? '0' + currentTime.getHours() : currentTime.getHours()) + ':' +
+          (currentTime.getMinutes() < 10 ? '0' + currentTime.getMinutes() : currentTime.getMinutes());
 
-      console.log('checkInDate update: ', checkInDate);
+      console.log('checkInDate update: ', checkInDate, selectedTimeItem.value);
     }
 
     const checkIn = () => {
@@ -129,6 +134,7 @@ export default defineComponent({
       showBeautishopInfo,
       checkIn,
       goToList,
+      selectedTimeItem,
     }
   }
 })
