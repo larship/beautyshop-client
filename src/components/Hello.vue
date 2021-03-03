@@ -36,7 +36,7 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import router from '@/router';
-import { checkAuth, setClientData, getClientData } from '@/auth';
+import { checkAuth, setClientData, getClientData } from '@/services/auth';
 import Client from '@/models/Client';
 
 enum ShowState {

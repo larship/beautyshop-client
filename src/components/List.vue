@@ -26,7 +26,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { getBeautyshops } from '@/models';
-import { getLocation, setLocation } from '@/location';
+import { getLocation, setLocation } from '@/services/location';
 import Beautyshop from '@/models/Beautyshop';
 import router from '@/router';
 

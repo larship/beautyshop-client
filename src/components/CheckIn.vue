@@ -52,7 +52,9 @@ import { getBeautyshop, createCheckIn } from '@/models';
 import router from '@/router';
 import DateChooser from '@/components/DateChooser.vue';
 import TimeChooser from '@/components/TimeChooser.vue';
-import { ExtendedClientData, getClientDataExtended } from '@/auth';
+import { ExtendedClientData, getClientDataExtended } from '@/services/auth';
+import CheckInItem from '@/models/CheckInItem';
+import { createCheckIn } from '@/services/checkIn';
 
 export default defineComponent({
   components: {TimeChooser, DateChooser},
