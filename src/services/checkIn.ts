@@ -1,23 +1,20 @@
 import CheckInItem from '@/models/CheckInItem';
 import { sendData } from '@/models';
 
-function saveCheckInLocal(checkInItem: CheckInItem): void {
-  localStorage.setItem('check-in-uuid', checkInItem.uuid);
+interface CreateCheckInRequestParams {
+  beautyshopUuid: string;
+  clientUuid: string;
+  workerUuid: string;
+  serviceTypeUuid: string;
+  startDate: Date;
 }
 
-export function createCheckIn(beautyshopUuid: string, clientUuid: string, workerUuid: string,
-                              serviceTypeUuid: string, startDate: Date): Promise<CheckInItem | null> {
-  return sendData<CheckInItem>('/create-check-in', {
-    beautyshopUuid,
-    clientUuid,
-    workerUuid,
-    serviceTypeUuid,
-    startDate: Math.floor(startDate.getTime() / 1000),
-  }).then((checkInItem: CheckInItem | null) => {
-    if (checkInItem) {
-      saveCheckInLocal(checkInItem);
-    }
-
-    return checkInItem;
+export async function createCheckIn(params: CreateCheckInRequestParams): Promise<CheckInItem | null> {
+  return await sendData<CheckInItem>('/create-check-in', {
+    beautyshopUuid: params.beautyshopUuid,
+    clientUuid: params.clientUuid,
+    workerUuid: params.workerUuid,
+    serviceTypeUuid: params.serviceTypeUuid,
+    startDate: Math.floor(params.startDate.getTime() / 1000),
   });
 }

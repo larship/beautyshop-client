@@ -56,6 +56,8 @@ import TimeChooser from '@/components/TimeChooser.vue';
 import { ExtendedClientData, getClientDataExtended } from '@/services/auth';
 import CheckInItem from '@/models/CheckInItem';
 import { createCheckIn } from '@/services/checkIn';
+import { ActionTypes } from '@/store/actions';
+import { useStore } from '@/store';
 
 export default defineComponent({
   components: {TimeChooser, DateChooser},
@@ -71,6 +73,8 @@ export default defineComponent({
     let checkInDate: Date = new Date();
     let isTimeSelected = ref<boolean>(false);
     let selectedTimeItem = ref<string>('');
+
+    const store = useStore();
 
     const goToList = () => {
       router.push('/list');
@@ -106,6 +110,8 @@ export default defineComponent({
       console.log('checkInDate update: ', checkInDate, selectedTimeItem.value);
     }
 
+    console.log('DATA:', store.getters.getCheckInItem()?.uuid);
+
     const checkIn = () => {
       let clientDataEx: ExtendedClientData | null = getClientDataExtended();
 
@@ -119,14 +125,19 @@ export default defineComponent({
         return;
       }
 
-      createCheckIn(currentBeautyshop.value.uuid, clientDataEx.clientUuid, workerUuid.value,
-          serviceTypeUuid.value, checkInDate).then((checkInItem: CheckInItem | null) => {
-        console.log('Создана запись в салон красоты: ', checkInItem);
-
-        serviceTypeUuid.value = '';
-        workerUuid.value = '';
-        selectedTimeItem.value = '';
+      store.dispatch(ActionTypes.CreateCheckIn, {
+        beautyshopUuid: currentBeautyshop.value.uuid,
+        clientUuid: clientDataEx.clientUuid,
+        workerUuid: workerUuid.value,
+        serviceTypeUuid: serviceTypeUuid.value,
+        startDate: checkInDate
       });
+
+      console.log('Создана запись в салон красоты');
+
+      serviceTypeUuid.value = '';
+      workerUuid.value = '';
+      selectedTimeItem.value = '';
     }
 
     return {
