@@ -89,6 +89,6 @@ export function getWorkers(beautyShopUuid: string): Promise<Worker[] | null> {
 }
 
 export function getServiceTypes(beautyShopUuid: string): Promise<ServiceType[] | null> {
-  return fetchDataList<ServiceType>('/service-types?beautyshopUuid=' + beautyShopUuid);
+  return fetchDataList<ServiceType>('/beautyshop/service-types?beautyshopUuid=' + beautyShopUuid);
 }
 
