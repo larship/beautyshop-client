@@ -1,4 +1,5 @@
 <template>
+  <CheckInPanel></CheckInPanel>
   <div class="list-screen">
     <div class="location-choose-form" v-if="showChangeLocationForm">
       <div class="location-item" @click="changeLocation('Москва')">Москва</div>
@@ -27,10 +28,12 @@
 import { defineComponent, ref } from 'vue';
 import { getBeautyshops } from '@/models';
 import { getLocation, setLocation } from '@/services/location';
+import CheckInPanel from '@/components/CheckInPanel.vue';
 import Beautyshop from '@/models/Beautyshop';
 import router from '@/router';
 
 export default defineComponent({
+  components: {CheckInPanel},
   setup() {
     const currentLocation = ref<string>(getLocation());
     const showChangeLocationForm = ref<boolean>(false);

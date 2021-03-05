@@ -1,9 +1,6 @@
 <template>
+  <CheckInPanel></CheckInPanel>
   <div class="check-in-screen">
-    <div v-if="!isCheckInExists" class="check-in-exists-panel">
-      Вы записаны в салон: НАЗВАНИЕ САЛОНА<br>
-      Также можно показывать в списке
-    </div>
     <div @click="showBeautishopInfo(currentBeautyshop)">
       Информация о салоне {{ currentBeautyshop?.name }} &gt;&gt;&gt;
     </div>
@@ -53,14 +50,13 @@ import { getBeautyshop } from '@/models';
 import router from '@/router';
 import DateChooser from '@/components/DateChooser.vue';
 import TimeChooser from '@/components/TimeChooser.vue';
+import CheckInPanel from '@/components/CheckInPanel.vue';
 import { ExtendedClientData, getClientDataExtended } from '@/services/auth';
-import CheckInItem from '@/models/CheckInItem';
-import { createCheckIn } from '@/services/checkIn';
 import { ActionTypes } from '@/store/actions';
 import { useStore } from '@/store';
 
 export default defineComponent({
-  components: {TimeChooser, DateChooser},
+  components: {TimeChooser, DateChooser, CheckInPanel},
   props: ['uuid'],
   setup(props) {
     const isLoading = ref<boolean>(false);
@@ -109,8 +105,6 @@ export default defineComponent({
 
       console.log('checkInDate update: ', checkInDate, selectedTimeItem.value);
     }
-
-    console.log('DATA:', store.getters.getCheckInItem()?.uuid);
 
     const checkIn = () => {
       let clientDataEx: ExtendedClientData | null = getClientDataExtended();
