@@ -1,7 +1,17 @@
 .check-in-panel {
+  display: grid;
+  grid-template-columns: 1fr 150px;
+  padding: @pageMargin;
+  background-color: #dddddd;
+  font-size: 14pt;
+
   &__info {
-    padding: @pageMargin;
-    background-color: #dddddd;
-    font-size: 14pt;
+
+  }
+
+  &__cancel {
+    button {
+      width: 100%;
+    }
   }
 }
