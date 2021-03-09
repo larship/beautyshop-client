@@ -6,5 +6,7 @@ export default interface Beautyshop {
   address: string;
   name: string;
   coordinates: number[] | null;
+  openHour: number;
+  closeHour: number;
   workers: BeautyshopWorker[];
 }

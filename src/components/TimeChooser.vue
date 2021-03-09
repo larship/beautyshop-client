@@ -6,18 +6,19 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, watch } from 'vue';
+import { ref, defineComponent, toRef } from 'vue';
 
 export default defineComponent({
   emits: ['timeChange'],
-  props: ['selectedTimeItem'],
+  props: ['selectedTimeItem', 'openHour', 'closeHour'],
   setup(props, {emit}) {
     let timeArray: string[] = [];
-    let startHour = 9;
-    let intervalsCount = 18;
+    let openHour = toRef(props, 'openHour');
+    let closeHour = toRef(props, 'closeHour');
+    let intervalsCount = (closeHour.value - openHour.value) * 2;
 
     for (let i = 0; i < intervalsCount; i++) {
-      let curHour = startHour + Math.floor(i / 2);
+      let curHour = openHour.value + Math.floor(i / 2);
       let curMinutes = i % 2 === 1 ? '30' : '00';
       let hour = (curHour < 10 ? '0' + curHour : curHour) + ':' + curMinutes;
 
@@ -25,21 +26,13 @@ export default defineComponent({
     }
 
     let timeItems = ref<string[]>(timeArray);
-    let selectedTimeItemInternal = ref<string>('');
-
-    watch(
-        () => props.selectedTimeItem,
-        (currentTime: string) => {
-          selectedTimeItemInternal.value = currentTime;
-        }
-    )
+    let selectedTimeItemInternal = toRef(props, 'selectedTimeItem')
 
     const chooseTime = (selectedItem: string) => {
-      selectedTimeItemInternal.value = selectedItem;
-
       let userDate: Date = new Date();
       let timeBlocks = selectedItem.split(':');
       userDate.setHours(+timeBlocks[0], +timeBlocks[1], 0, 0);
+      selectedTimeItemInternal.value = selectedItem;
 
       emit('timeChange', userDate);
     }

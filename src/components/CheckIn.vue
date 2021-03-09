@@ -2,10 +2,10 @@
   <CheckInPanel></CheckInPanel>
   <div class="check-in-screen">
     <div @click="showBeautishopInfo(currentBeautyshop)">
-      Информация о салоне {{ currentBeautyshop?.name }} &gt;&gt;&gt;
+      Информация о салоне {{ currentBeautyshop?.name }} &gt;
     </div>
     <div @click="showBeautishopInfo(currentBeautyshop)">
-      Записать другого человека &gt;&gt;&gt;
+      Записать другого человека &gt;
     </div>
     <div class="data-choose-row">
       <div class="data-choose-row--title">Мастер:</div>
@@ -33,7 +33,14 @@
     </div>
     <div class="data-choose-row">
       <div class="data-choose-row--title">Время:</div>
-      <TimeChooser v-bind:selectedTimeItem="selectedTimeItem" @timeChange="onTimeChange"></TimeChooser>
+      <TimeChooser
+          v-bind:selected-time-item="selectedTimeItem"
+          v-bind:open-hour="currentBeautyshop?.openHour"
+          v-bind:close-hour="currentBeautyshop?.closeHour"
+          @timeChange="onTimeChange"
+          v-if="currentBeautyshop"
+      >
+      </TimeChooser>
     </div>
     <div class="check-in-buttons">
       <button @click="checkIn()" v-bind:disabled="!workerUuid || !serviceTypeUuid || !isTimeSelected">Записаться

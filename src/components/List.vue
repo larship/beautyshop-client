@@ -17,7 +17,7 @@
           <div class="beautyshop--address">{{ beautyshop.address }}</div>
         </div>
         <div class="beautyshop--link">
-          Открыть &gt;&gt;&gt;
+          Открыть
         </div>
       </div>
     </div>
