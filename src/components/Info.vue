@@ -1,10 +1,33 @@
 <template>
   <div class="info-screen">
-    <div class="info-common">
-      {{ currentBeautyshop?.name }}<br>
-      {{ currentBeautyshop?.address }}
+    <div class="info-common" v-if="currentBeautyshop">
+      {{ currentBeautyshop.name }}<br>
+      {{ currentBeautyshop.address }}<br>
+      Часы работы: {{ currentBeautyshop.openHour }}:00 - {{ currentBeautyshop.closeHour }}:00
     </div>
     <div class="info-map" id="info-map" v-if="currentBeautyshop?.coordinates"></div>
+    <div v-if="true && currentBeautyshop" class="info-statistics">
+      <div class="info-statistics--title">Административная статистика</div>
+      <select>
+        <option>Сегодня</option>
+        <option>Вчера</option>
+        <option>Неделя</option>
+        <option>Месяц</option>
+        <option>Всего</option>
+      </select>
+      <div class="info-statistics--block">
+        <span>Всего записано человек</span><span>0</span>
+        <span>Оплачено услуг на сумму</span><span>0 руб.</span>
+      </div>
+      <div class="info-statistics--workers-title">Сотрудники</div>
+      <div v-for="worker in currentBeautyshop.workers" v-bind:key="worker.uuid" class="info-statistics--worker-block">
+        <div>{{ worker.fullName }}</div>
+        <div class="info-statistics--block">
+          <span>Записано человек</span><span>0</span>
+          <span>Оплачено услуг на сумму</span><span>0 руб.</span>
+        </div>
+      </div>
+    </div>
     <div class="buttons-container">
       <button @click="goToCheckIn()">Назад</button>
     </div>
@@ -21,9 +44,7 @@ import router from '@/router';
 export default defineComponent({
   props: ['uuid'],
   setup(props) {
-    const isLoading = ref<boolean>(false);
     const currentBeautyshop = ref<Beautyshop | null>(null);
-    const workersList = ref<object>([]);
 
     getBeautyshop(props.uuid).then((beautyshop: Beautyshop | null) => {
       if (!beautyshop) {
@@ -56,9 +77,7 @@ export default defineComponent({
     }
 
     return {
-      isLoading,
       currentBeautyshop,
-      workersList,
       goToCheckIn,
     }
   }
