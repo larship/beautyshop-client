@@ -1,4 +1,5 @@
 <template>
+  <CheckInPanel></CheckInPanel>
   <div class="info-screen">
     <div class="info-common" v-if="currentBeautyshop">
       {{ currentBeautyshop.name }}<br>
@@ -39,9 +40,11 @@ import { ref, defineComponent } from 'vue';
 import Beautyshop from '@/models/Beautyshop';
 import { getBeautyshop } from '@/models';
 import router from '@/router';
+import CheckInPanel from '@/components/CheckInPanel.vue';
 
 /// <reference path="../declarations/ymaps.d.ts" />
 export default defineComponent({
+  components: {CheckInPanel},
   props: ['uuid'],
   setup(props) {
     const currentBeautyshop = ref<Beautyshop | null>(null);
