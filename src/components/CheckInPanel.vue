@@ -15,11 +15,11 @@ import { defineComponent, computed } from 'vue';
 import { useStore } from '@/store';
 import CheckInItem from '@/models/CheckInItem';
 import dayjs from 'dayjs';
-import updateLocale from 'dayjs/plugin/updateLocale';
+import UpdateLocale from 'dayjs/plugin/updateLocale';
 
 export default defineComponent({
   setup() {
-    dayjs.extend(updateLocale);
+    dayjs.extend(UpdateLocale);
     dayjs.updateLocale('en', {
       months: [
         "января", "февраля", "марта", "апреля", "мая", "июня", "июля",

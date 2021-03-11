@@ -34,7 +34,8 @@
     <div class="data-choose-row">
       <div class="data-choose-row--title">Время:</div>
       <TimeChooser
-          v-bind:selected-time-item="selectedTimeItem"
+          v-bind:is-time-selected="isTimeSelected"
+          v-bind:selected-date-item="checkInDatePlain"
           v-bind:open-hour="currentBeautyshop?.openHour"
           v-bind:close-hour="currentBeautyshop?.closeHour"
           @timeChange="onTimeChange"
@@ -61,6 +62,7 @@ import CheckInPanel from '@/components/CheckInPanel.vue';
 import { ExtendedClientData, getClientDataExtended } from '@/services/auth';
 import { ActionTypes } from '@/store/actions';
 import { useStore } from '@/store';
+import dayjs from 'dayjs';
 
 export default defineComponent({
   components: {TimeChooser, DateChooser, CheckInPanel},
@@ -73,9 +75,9 @@ export default defineComponent({
     const currentBeautyshop = ref<Beautyshop | null>(null);
     const workersList = ref<object>([]);
 
-    let checkInDate: Date = new Date();
+    let checkInDate = new Date();
+    let checkInDatePlain = ref<string>(dayjs(checkInDate).format('DD-MM-YYYY'));
     let isTimeSelected = ref<boolean>(false);
-    let selectedTimeItem = ref<string>('');
 
     const store = useStore();
 
@@ -98,6 +100,8 @@ export default defineComponent({
 
     const onDateChange = (currentDate: Date) => {
       checkInDate.setFullYear(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+      checkInDatePlain.value = dayjs(checkInDate).format('DD-MM-YYYY');
+      isTimeSelected.value = false;
 
       console.log('checkInDate update: ', checkInDate);
     }
@@ -105,12 +109,7 @@ export default defineComponent({
     const onTimeChange = (currentTime: Date) => {
       checkInDate.setHours(currentTime.getHours(), currentTime.getMinutes(), 0, 0);
       isTimeSelected.value = true;
-      // Нужно для того, чтобы был вызов watch'а внутри TimeChooser компонента. Если не менять значение здесь, то watch
-      // не будет изменяться, т.к. нет изменений
-      selectedTimeItem.value = (currentTime.getHours() < 10 ? '0' + currentTime.getHours() : currentTime.getHours()) + ':' +
-          (currentTime.getMinutes() < 10 ? '0' + currentTime.getMinutes() : currentTime.getMinutes());
-
-      console.log('checkInDate update: ', checkInDate, selectedTimeItem.value);
+      console.log('currentTime:', currentTime);
     }
 
     const checkIn = () => {
@@ -138,7 +137,7 @@ export default defineComponent({
 
       serviceTypeUuid.value = '';
       workerUuid.value = '';
-      selectedTimeItem.value = '';
+      isTimeSelected.value = false;
     }
 
     return {
@@ -154,7 +153,7 @@ export default defineComponent({
       showBeautishopInfo,
       checkIn,
       goToList,
-      selectedTimeItem,
+      checkInDatePlain,
     }
   }
 })
