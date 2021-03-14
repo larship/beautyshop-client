@@ -1,12 +1,13 @@
 import { ActionContext, ActionTree } from 'vuex';
 import { Mutations, MutationType } from './mutations';
 import { State } from './state';
-import { cancelCheckIn, createCheckIn } from '@/services/checkIn';
+import { cancelCheckIn, createCheckIn, getBeautyshopCheckInList } from '@/services/checkIn';
 import CheckInItem from '@/models/CheckInItem';
 
 export enum ActionTypes {
   CreateCheckIn = 'CREATE_CHECK_IN',
   CancelCheckIn = 'CANCEL_CHECK_IN',
+  GetBeautyshopCheckInList = 'GET_BEAUTYSHOP_CHECKIN_LIST',
 }
 
 type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
@@ -24,9 +25,20 @@ interface CreateCheckInActionParams {
   startDate: Date;
 }
 
+interface CancelCheckIn {
+  checkInUuid: string;
+}
+
+interface GetBeautyshopCheckInListParams {
+  beautyshopUuid: string;
+  startDate: string;
+  endDate: string;
+}
+
 export type Actions = {
   [ActionTypes.CreateCheckIn](context: ActionAugments, data: CreateCheckInActionParams): void;
-  [ActionTypes.CancelCheckIn](context: ActionAugments, checkInUuid: string): void;
+  [ActionTypes.CancelCheckIn](context: ActionAugments, data: CancelCheckIn): void;
+  [ActionTypes.GetBeautyshopCheckInList](context: ActionAugments, data: GetBeautyshopCheckInListParams): void;
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -39,10 +51,10 @@ export const actions: ActionTree<State, State> & Actions = {
     commit(MutationType.SetLoading, false);
   },
 
-  async [ActionTypes.CancelCheckIn]({commit}, checkInUuid: string) {
+  async [ActionTypes.CancelCheckIn]({commit}, data: CancelCheckIn) {
     commit(MutationType.SetLoading, true);
 
-    const status = await cancelCheckIn(checkInUuid);
+    const status = await cancelCheckIn(data.checkInUuid);
 
     if (status) {
       commit(MutationType.CancelCheckIn, null);
@@ -50,4 +62,13 @@ export const actions: ActionTree<State, State> & Actions = {
 
     commit(MutationType.SetLoading, false);
   },
+
+  async [ActionTypes.GetBeautyshopCheckInList]({commit}, data: GetBeautyshopCheckInListParams) {
+    commit(MutationType.SetLoading, true);
+
+    let checkInList = await getBeautyshopCheckInList(data.beautyshopUuid, data.startDate, data.endDate);
+    commit(MutationType.SetBeautyshopCheckInList, checkInList);
+
+    commit(MutationType.SetLoading, false);
+  }
 }

@@ -1,5 +1,5 @@
 import CheckInItem from '@/models/CheckInItem';
-import { sendData } from '@/models';
+import { fetchDataList, sendData } from '@/models';
 
 interface CreateCheckInRequestParams {
   beautyshopUuid: string;
@@ -23,4 +23,9 @@ export async function cancelCheckIn(uuid: string): Promise<boolean | null> {
   return await sendData<boolean>('/check-in/cancel', {
     uuid
   });
+}
+
+export async function getBeautyshopCheckInList(beautyshopUuid: string, startDate: string, endDate: string): Promise<CheckInItem[] | null> {
+  return await fetchDataList<CheckInItem>('/check-in/list-for-beautyshop?uuid=' + beautyshopUuid + '&startDate=' + startDate +
+    '&endDate=' + endDate);
 }

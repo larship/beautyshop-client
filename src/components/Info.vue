@@ -7,6 +7,9 @@
       Часы работы: {{ currentBeautyshop.openHour }}:00 - {{ currentBeautyshop.closeHour }}:00
     </div>
     <div class="info-map" id="info-map" v-if="currentBeautyshop?.coordinates"></div>
+    <div class="info-check-in-list">
+      Список записей на сегодня:
+    </div>
     <div v-if="true && currentBeautyshop" class="info-statistics">
       <div class="info-statistics--title">Административная статистика</div>
       <select>
@@ -41,6 +44,9 @@ import Beautyshop from '@/models/Beautyshop';
 import { getBeautyshop } from '@/models';
 import router from '@/router';
 import CheckInPanel from '@/components/CheckInPanel.vue';
+import { ActionTypes } from '@/store/actions';
+import { useStore } from '@/store';
+import dayjs from 'dayjs';
 
 /// <reference path="../declarations/ymaps.d.ts" />
 export default defineComponent({
@@ -74,6 +80,15 @@ export default defineComponent({
         });
       }
     });
+
+    const store = useStore();
+    store.dispatch(ActionTypes.GetBeautyshopCheckInList, {
+      beautyshopUuid: props.uuid,
+      startDate: dayjs().format('YYYY-MM-DD'),
+      endDate: dayjs().format('YYYY-MM-DD'),
+    });
+
+    console.log('CheckInList:', store.getters.getBeautyshopCheckInList());
 
     const goToCheckIn = () => {
       router.push({name: 'CheckIn', params: {uuid: props.uuid}});

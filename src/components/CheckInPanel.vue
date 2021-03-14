@@ -38,7 +38,9 @@ export default defineComponent({
     });
 
     const cancelCheckIn = () => {
-      store.dispatch(ActionTypes.CancelCheckIn, checkInItem.value?.uuid);
+      if (checkInItem.value?.uuid) {
+        store.dispatch(ActionTypes.CancelCheckIn, { checkInUuid: checkInItem.value.uuid });
+      }
     }
 
     return {

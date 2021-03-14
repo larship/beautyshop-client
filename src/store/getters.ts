@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 
 export type Getters = {
   getCheckInItem(state: State): () => CheckInItem | null;
+  getBeautyshopCheckInList(state: State): () => CheckInItem[] | null;
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -15,4 +16,7 @@ export const getters: GetterTree<State, State> & Getters = {
 
     return state.checkInItem;
   },
+  getBeautyshopCheckInList: (state: State) => () => {
+    return state.beautyhopCheckInList;
+  }
 }
