@@ -5,7 +5,7 @@
       {{ checkInItem.serviceType.name }}, {{ checkInItem.serviceType.price }} рублей
     </div>
     <div class="check-in-panel__cancel">
-      <button>Отмена</button>
+      <button @click="cancelCheckIn()">Отмена</button>
     </div>
   </div>
 </template>
@@ -16,6 +16,7 @@ import { useStore } from '@/store';
 import CheckInItem from '@/models/CheckInItem';
 import dayjs from 'dayjs';
 import UpdateLocale from 'dayjs/plugin/updateLocale';
+import { ActionTypes } from '@/store/actions';
 
 export default defineComponent({
   setup() {
@@ -36,9 +37,14 @@ export default defineComponent({
       return dayjs(checkInItem.value?.startDate).format('D MMMM, HH:mm');
     });
 
+    const cancelCheckIn = () => {
+      store.dispatch(ActionTypes.CancelCheckIn, checkInItem.value?.uuid);
+    }
+
     return {
       checkInItem,
       checkInDate,
+      cancelCheckIn,
     }
   }
 })
