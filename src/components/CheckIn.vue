@@ -21,7 +21,7 @@
         <template v-for="worker in currentBeautyshop?.workers">
           <template v-if="workerUuid === worker.uuid">
             <option v-for="serviceType in worker.services" v-bind:value="serviceType.uuid"
-                    v-bind:key="serviceType.uuid">{{ serviceType.name }}
+                    v-bind:key="serviceType.uuid">{{ serviceType.name }} &ndash; {{ serviceType.price }} руб.
             </option>
           </template>
         </template>
