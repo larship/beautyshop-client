@@ -47,6 +47,7 @@ import CheckInPanel from '@/components/CheckInPanel.vue';
 import { ActionTypes } from '@/store/actions';
 import { useStore } from '@/store';
 import dayjs from 'dayjs';
+import Utc from 'dayjs/plugin/utc';
 
 /// <reference path="../declarations/ymaps.d.ts" />
 export default defineComponent({
@@ -81,11 +82,13 @@ export default defineComponent({
       }
     });
 
+    dayjs.extend(Utc);
+
     const store = useStore();
     store.dispatch(ActionTypes.GetBeautyshopCheckInList, {
       beautyshopUuid: props.uuid,
-      startDate: dayjs().format('YYYY-MM-DD'),
-      endDate: dayjs().format('YYYY-MM-DD'),
+      dateFrom: dayjs().startOf('day').utc().format('YYYY-MM-DD HH:mm:ss'),
+      dateTo: dayjs().endOf('day').utc().format('YYYY-MM-DD HH:mm:ss'),
     });
 
     console.log('CheckInList:', store.getters.getBeautyshopCheckInList());

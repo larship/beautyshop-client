@@ -31,8 +31,8 @@ interface CancelCheckIn {
 
 interface GetBeautyshopCheckInListParams {
   beautyshopUuid: string;
-  startDate: string;
-  endDate: string;
+  dateFrom: string;
+  dateTo: string;
 }
 
 export type Actions = {
@@ -66,7 +66,7 @@ export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.GetBeautyshopCheckInList]({commit}, data: GetBeautyshopCheckInListParams) {
     commit(MutationType.SetLoading, true);
 
-    let checkInList = await getBeautyshopCheckInList(data.beautyshopUuid, data.startDate, data.endDate);
+    let checkInList = await getBeautyshopCheckInList(data.beautyshopUuid, data.dateFrom, data.dateTo);
     commit(MutationType.SetBeautyshopCheckInList, checkInList);
 
     commit(MutationType.SetLoading, false);
