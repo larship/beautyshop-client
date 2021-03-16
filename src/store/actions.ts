@@ -3,11 +3,15 @@ import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 import { cancelCheckIn, createCheckIn, getBeautyshopCheckInList } from '@/services/checkIn';
 import CheckInItem from '@/models/CheckInItem';
+import { getBeautyshops } from '@/models';
 
 export enum ActionTypes {
   CreateCheckIn = 'CREATE_CHECK_IN',
   CancelCheckIn = 'CANCEL_CHECK_IN',
   GetBeautyshopCheckInList = 'GET_BEAUTYSHOP_CHECKIN_LIST',
+  GetBeautyshopList = 'GET_BEAUTYSHOP_LIST',
+  AddToFavorite = 'ADD_TO_FAVORITE',
+  RemoveFromFavorite = 'REMOVE_FROM_FAVORITE',
 }
 
 type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
@@ -25,7 +29,7 @@ interface CreateCheckInActionParams {
   startDate: Date;
 }
 
-interface CancelCheckIn {
+interface CancelCheckInParams {
   checkInUuid: string;
 }
 
@@ -35,10 +39,25 @@ interface GetBeautyshopCheckInListParams {
   dateTo: string;
 }
 
+interface GetBeautyshopListParams {
+  location: string;
+}
+
+interface AddToFavoriteParams {
+  beautyshopUuid: string;
+}
+
+interface RemoveFromFavoriteParams {
+  beautyshopUuid: string;
+}
+
 export type Actions = {
   [ActionTypes.CreateCheckIn](context: ActionAugments, data: CreateCheckInActionParams): void;
-  [ActionTypes.CancelCheckIn](context: ActionAugments, data: CancelCheckIn): void;
+  [ActionTypes.CancelCheckIn](context: ActionAugments, data: CancelCheckInParams): void;
   [ActionTypes.GetBeautyshopCheckInList](context: ActionAugments, data: GetBeautyshopCheckInListParams): void;
+  [ActionTypes.GetBeautyshopList](context: ActionAugments, data: GetBeautyshopListParams): void;
+  [ActionTypes.AddToFavorite](context: ActionAugments, data: AddToFavoriteParams): void;
+  [ActionTypes.RemoveFromFavorite](context: ActionAugments, data: RemoveFromFavoriteParams): void;
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -51,7 +70,7 @@ export const actions: ActionTree<State, State> & Actions = {
     commit(MutationType.SetLoading, false);
   },
 
-  async [ActionTypes.CancelCheckIn]({commit}, data: CancelCheckIn) {
+  async [ActionTypes.CancelCheckIn]({commit}, data: CancelCheckInParams) {
     commit(MutationType.SetLoading, true);
 
     const status = await cancelCheckIn(data.checkInUuid);
@@ -70,5 +89,22 @@ export const actions: ActionTree<State, State> & Actions = {
     commit(MutationType.SetBeautyshopCheckInList, checkInList);
 
     commit(MutationType.SetLoading, false);
-  }
+  },
+
+  async [ActionTypes.GetBeautyshopList]({commit}, data: GetBeautyshopListParams) {
+    commit(MutationType.SetLoading, true);
+
+    let beautyshops = await getBeautyshops(data.location);
+    commit(MutationType.SetBeautyshopList, beautyshops);
+
+    commit(MutationType.SetLoading, false);
+  },
+
+  [ActionTypes.AddToFavorite]({commit}, data: AddToFavoriteParams) {
+    commit(MutationType.AddToFavorite, data.beautyshopUuid);
+  },
+
+  [ActionTypes.RemoveFromFavorite]({commit}, data: RemoveFromFavoriteParams) {
+    commit(MutationType.RemoveFromFavorite, data.beautyshopUuid);
+  },
 }
