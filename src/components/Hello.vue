@@ -77,7 +77,7 @@ export default defineComponent({
                 name: name.value.replace(/[^а-яА-Яa-zA-Z ]/g, '')
               }
           );
-          router.push('/list');
+          router.push({name: 'List'});
           break;
       }
     }
@@ -85,7 +85,7 @@ export default defineComponent({
     checkAuth().then((client: Client | null) => {
       if (client && getClientData()) {
         // В этом случае экран приветствия не нужен, сразу перебросим на список
-        router.push('/list');
+        router.push({name: 'List'});
       }
     });
 

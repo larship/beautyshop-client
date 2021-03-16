@@ -1,11 +1,8 @@
 <template>
   <CheckInPanel></CheckInPanel>
   <div class="check-in-screen">
-    <div @click="showBeautishopInfo(currentBeautyshop)">
-      Информация о салоне {{ currentBeautyshop?.name }} &gt;
-    </div>
-    <div @click="showBeautishopInfo(currentBeautyshop)">
-      Записать другого человека &gt;
+    <div @click="checkInOther()">
+      Записать другого человека (перейти на эту же страницу) &gt;
     </div>
     <div class="data-choose-row">
       <div class="data-choose-row--title">Мастер:</div>
@@ -43,10 +40,10 @@
       >
       </TimeChooser>
     </div>
-    <div class="check-in-buttons">
+    <div class="buttons-container">
       <button @click="checkIn()" v-bind:disabled="!workerUuid || !serviceTypeUuid || !isTimeSelected">Записаться
       </button>
-      <button @click="goToList()">Назад</button>
+      <button @click="goToInfo()">Назад</button>
     </div>
   </div>
 </template>
@@ -71,7 +68,6 @@ export default defineComponent({
     const isLoading = ref<boolean>(false);
     const workerUuid = ref<string>('');
     const serviceTypeUuid = ref<string>('');
-    const beautyshopsList = ref<object[]>([]);
     const currentBeautyshop = ref<Beautyshop | null>(null);
     const workersList = ref<object>([]);
 
@@ -81,8 +77,8 @@ export default defineComponent({
 
     const store = useStore();
 
-    const goToList = () => {
-      router.push('/list');
+    const goToInfo = () => {
+      router.push({name: 'Info', params: {uuid: props.uuid}});
     }
 
     getBeautyshop(props.uuid).then((beautyshop: Beautyshop | null) => {
@@ -94,8 +90,8 @@ export default defineComponent({
       currentBeautyshop.value = beautyshop;
     });
 
-    const showBeautishopInfo = (beautyshop: Beautyshop) => {
-      router.push('/info/' + beautyshop.uuid);
+    const checkInOther = () => {
+      router.push({name: 'CheckIn', params: {uuid: props.uuid}});
     }
 
     const onDateChange = (currentDate: Date) => {
@@ -141,7 +137,6 @@ export default defineComponent({
     }
 
     return {
-      beautyshopsList,
       isLoading,
       currentBeautyshop,
       workerUuid,
@@ -150,9 +145,9 @@ export default defineComponent({
       isTimeSelected,
       onDateChange,
       onTimeChange,
-      showBeautishopInfo,
+      checkInOther,
       checkIn,
-      goToList,
+      goToInfo,
       checkInDatePlain,
     }
   }

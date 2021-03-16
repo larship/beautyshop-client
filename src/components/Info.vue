@@ -7,10 +7,7 @@
       Часы работы: {{ currentBeautyshop.openHour }}:00 - {{ currentBeautyshop.closeHour }}:00
     </div>
     <div class="info-map" id="info-map" v-if="currentBeautyshop?.coordinates"></div>
-    <div class="info-check-in-list">
-      Список записей на сегодня:
-    </div>
-    <div v-if="true && currentBeautyshop" class="info-statistics">
+    <div v-if="false && currentBeautyshop" class="info-statistics">
       <div class="info-statistics--title">Административная статистика</div>
       <select>
         <option>Сегодня</option>
@@ -33,7 +30,8 @@
       </div>
     </div>
     <div class="buttons-container">
-      <button @click="goToCheckIn()">Назад</button>
+      <button @click="goToCheckIn()">Записаться</button>
+      <button @click="goToList()">Назад</button>
     </div>
   </div>
 </template>
@@ -93,6 +91,10 @@ export default defineComponent({
 
     console.log('CheckInList:', store.getters.getBeautyshopCheckInList());
 
+    const goToList = () => {
+      router.push({name: 'List'});
+    }
+
     const goToCheckIn = () => {
       router.push({name: 'CheckIn', params: {uuid: props.uuid}});
     }
@@ -100,6 +102,7 @@ export default defineComponent({
     return {
       currentBeautyshop,
       goToCheckIn,
+      goToList,
     }
   }
 })
