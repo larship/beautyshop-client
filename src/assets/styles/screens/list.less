@@ -1,5 +1,5 @@
 .list-screen {
-  margin: @pageMargin;
+  min-height: calc(100vh - 65px);
 
   .loading {
     text-align: center;
@@ -31,8 +31,12 @@
       justify-content: space-between;
       align-items: center;
       padding: 10px;
-      border: 1px solid #c8c8c8;
-      border-radius: 5px;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      border-top: 1px solid #c8c8c8;
+      border-bottom: 1px solid #c8c8c8;
+      //border-radius: 5px;
+      background-color: #ffffff;
 
       &--name {
         margin-bottom: 10px;
@@ -40,7 +44,7 @@
     }
 
     .beautyshop + .beautyshop {
-      margin-top: 15px;
+      margin-top: 7px;
     }
   }
 }

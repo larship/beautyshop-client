@@ -1,5 +1,9 @@
 <template>
   <CheckInPanel></CheckInPanel>
+  <div class="screen-title">
+    Каталог
+    <div class="location-select" @click="showChangeLocationForm = true">{{ currentLocation }}</div>
+  </div>
   <div class="list-screen">
     <div class="location-choose-form" v-if="showChangeLocationForm">
       <div class="location-item" @click="changeLocation('Москва')">Москва</div>
@@ -7,7 +11,6 @@
       <div class="location-item" @click="changeLocation('Новосибирск')">Новосибирск</div>
       <div class="location-item" @click="changeLocation('Владивосток')">Владивосток</div>
     </div>
-    <div class="location-select" @click="showChangeLocationForm = true">{{ currentLocation }} (изменить)</div>
     <div class="loading" v-if="isLoading">Загрузка...</div>
     <div class="beautyshop-list">
       <div @click="openBeautyshop(beautyshop)" v-for="beautyshop in beautyshopsList" v-bind:key="beautyshop.uuid"
@@ -15,9 +18,6 @@
         <div>
           <div class="beautyshop--name">{{ beautyshop.name }}</div>
           <div class="beautyshop--address">{{ beautyshop.address }}</div>
-        </div>
-        <div class="beautyshop--link">
-          Открыть
         </div>
       </div>
     </div>
