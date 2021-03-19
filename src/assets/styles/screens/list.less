@@ -1,5 +1,5 @@
 .list-screen {
-  min-height: calc(100vh - 65px);
+  //min-height: calc(100vh - 65px); // Учитывать ещё панель текущей записи
 
   header {
     font-size: 14pt;
@@ -48,7 +48,8 @@
 
   .beautyshop-list {
     .beautyshop {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 50px;
       justify-content: space-between;
       align-items: center;
       padding: 10px;
@@ -65,6 +66,7 @@
 
       &--favorite {
         font-size: 22pt;
+        text-align: center;
       }
     }
 

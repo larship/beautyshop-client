@@ -3,7 +3,7 @@ import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 import { cancelCheckIn, createCheckIn, getBeautyshopCheckInList } from '@/services/checkIn';
 import CheckInItem from '@/models/CheckInItem';
-import { getBeautyshops } from '@/models';
+import { getBeautyshopList } from '@/models';
 
 export enum ActionTypes {
   CreateCheckIn = 'CREATE_CHECK_IN',
@@ -94,7 +94,7 @@ export const actions: ActionTree<State, State> & Actions = {
   async [ActionTypes.GetBeautyshopList]({commit}, data: GetBeautyshopListParams) {
     commit(MutationType.SetLoading, true);
 
-    let beautyshops = await getBeautyshops(data.location);
+    let beautyshops = await getBeautyshopList(data.location);
     commit(MutationType.SetBeautyshopList, beautyshops);
 
     commit(MutationType.SetLoading, false);

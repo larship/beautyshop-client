@@ -55,7 +55,7 @@ export function fetchDataList<T>(url: string): Promise<T[] | null> {
   });
 }
 
-export function getBeautyshops(city: string): Promise<Beautyshop[]> {
+export function getBeautyshopList(city: string): Promise<Beautyshop[]> {
   return fetchDataList<Beautyshop>('/beautyshops?city=' + city).then((data: Beautyshop[] | null) => {
     if (!data) {
       return [];
@@ -73,16 +73,16 @@ export function getBeautyshops(city: string): Promise<Beautyshop[]> {
   });
 }
 
-export function getBeautyshop(uuid: string): Promise<Beautyshop | null> {
-  return fetchData<Beautyshop>('/beautyshop?uuid=' + uuid).then((beautyshop: Beautyshop | null) => {
-    if (beautyshop && beautyshop.coordinates) {
-      let coordsStr = beautyshop.coordinates as unknown as string;
-      beautyshop.coordinates = coordsStr.replace(/[^0-9,.]/g, '').split(',').map(entry => Number(entry));
-    }
-
-    return beautyshop as Beautyshop ?? null;
-  });
-}
+// export function getBeautyshop(uuid: string): Promise<Beautyshop | null> {
+//   return fetchData<Beautyshop>('/beautyshop?uuid=' + uuid).then((beautyshop: Beautyshop | null) => {
+//     if (beautyshop && beautyshop.coordinates) {
+//       let coordsStr = beautyshop.coordinates as unknown as string;
+//       beautyshop.coordinates = coordsStr.replace(/[^0-9,.]/g, '').split(',').map(entry => Number(entry));
+//     }
+//
+//     return beautyshop as Beautyshop ?? null;
+//   });
+// }
 
 export function getWorkers(beautyShopUuid: string): Promise<Worker[] | null> {
   return fetchDataList<Worker>('/workers?beautyshopUuid=' + beautyShopUuid);

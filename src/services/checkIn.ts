@@ -26,7 +26,7 @@ export async function cancelCheckIn(uuid: string): Promise<boolean | null> {
 }
 
 export async function getBeautyshopCheckInList(beautyshopUuid: string, dateFrom: string, dateTo: string): Promise<CheckInItem[] | null> {
-  let params = new URLSearchParams({
+  const params = new URLSearchParams({
     uuid: beautyshopUuid,
     dateFrom,
     dateTo

@@ -10,4 +10,5 @@ export default interface Beautyshop {
   closeHour: number;
   workers: BeautyshopWorker[];
   favorite: boolean;
+  admins: string[];
 }

@@ -7,7 +7,7 @@
       Часы работы: {{ currentBeautyshop.openHour }}:00 - {{ currentBeautyshop.closeHour }}:00
     </div>
     <div class="info-map" id="info-map" v-if="currentBeautyshop?.coordinates"></div>
-    <div v-if="false && currentBeautyshop" class="info-statistics">
+    <div v-if="isAdmin && currentBeautyshop" class="info-statistics">
       <div class="info-statistics--title">Административная статистика</div>
       <select>
         <option>Сегодня</option>
@@ -39,57 +39,41 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import Beautyshop from '@/models/Beautyshop';
-import { getBeautyshop } from '@/models';
 import router from '@/router';
 import CheckInPanel from '@/components/CheckInPanel.vue';
 import { ActionTypes } from '@/store/actions';
 import { useStore } from '@/store';
 import dayjs from 'dayjs';
 import Utc from 'dayjs/plugin/utc';
+import { createMap } from '@/services/map';
+import { getClientDataExtended } from '@/services/auth';
 
-/// <reference path="../declarations/ymaps.d.ts" />
 export default defineComponent({
   components: {CheckInPanel},
   props: ['uuid'],
   setup(props) {
-    const currentBeautyshop = ref<Beautyshop | null>(null);
+    const store = useStore();
+    const currentBeautyshop = ref<Beautyshop | null>(store.getters.getBeautyshop(props.uuid));
+    const isAdmin = ref(false);
 
-    getBeautyshop(props.uuid).then((beautyshop: Beautyshop | null) => {
-      if (!beautyshop) {
-        console.log('Не удалось получить информацию о салоне');
-        return;
-      }
+    if (currentBeautyshop.value?.coordinates) {
+      createMap('info-map', currentBeautyshop.value.coordinates as number[]);
+    }
 
-      currentBeautyshop.value = beautyshop;
-
-      if (beautyshop.coordinates) {
-        // eslint-disable-next-line
-        ymaps.ready(function () {
-          // eslint-disable-next-line
-          let myMap: ymaps.Map = new ymaps.Map("info-map", {
-                center: beautyshop.coordinates as number[],
-                zoom: 18,
-                controls: []
-              }),
-              // eslint-disable-next-line
-              myPlacemark = new ymaps.Placemark(beautyshop.coordinates as number[], {});
-
-          // myMap.behaviors.enable('ruler');
-          myMap.geoObjects.add(myPlacemark);
-        });
+    currentBeautyshop.value?.admins.forEach((adminUuid: string) => {
+      // @TODO Перенести в STORE
+      if (adminUuid === getClientDataExtended()?.clientUuid) {
+        isAdmin.value = true;
       }
     });
 
     dayjs.extend(Utc);
 
-    const store = useStore();
     store.dispatch(ActionTypes.GetBeautyshopCheckInList, {
       beautyshopUuid: props.uuid,
       dateFrom: dayjs().startOf('day').utc().format('YYYY-MM-DD HH:mm:ss'),
       dateTo: dayjs().endOf('day').utc().format('YYYY-MM-DD HH:mm:ss'),
     });
-
-    console.log('CheckInList:', store.getters.getBeautyshopCheckInList());
 
     const goToList = () => {
       router.push({name: 'List'});
@@ -99,10 +83,14 @@ export default defineComponent({
       router.push({name: 'CheckIn', params: {uuid: props.uuid}});
     }
 
+    console.log('currentBeautyshop:', currentBeautyshop);
+    console.log('CheckInList:', store.getters.getBeautyshopCheckInList());
+
     return {
       currentBeautyshop,
       goToCheckIn,
       goToList,
+      isAdmin
     }
   }
 })

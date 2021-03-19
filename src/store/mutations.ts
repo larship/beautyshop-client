@@ -41,6 +41,7 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [MutationType.SetBeautyshopList](state, value) {
     state.beautyshopList = value;
+    localStorage.setItem('beautyshop-list', JSON.stringify(state.beautyshopList));
   },
   [MutationType.AddToFavorite](state, value) {
     state.beautyshopFavoriteList.push(value);

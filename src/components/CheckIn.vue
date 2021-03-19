@@ -51,7 +51,7 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import Beautyshop from '@/models/Beautyshop';
-import { getBeautyshop } from '@/models';
+// import { getBeautyshop } from '@/models';
 import router from '@/router';
 import DateChooser from '@/components/DateChooser.vue';
 import TimeChooser from '@/components/TimeChooser.vue';
@@ -68,27 +68,16 @@ export default defineComponent({
     const isLoading = ref<boolean>(false);
     const workerUuid = ref<string>('');
     const serviceTypeUuid = ref<string>('');
-    const currentBeautyshop = ref<Beautyshop | null>(null);
     const workersList = ref<object>([]);
-
-    let checkInDate = new Date();
-    let checkInDatePlain = ref<string>(dayjs(checkInDate).format('DD-MM-YYYY'));
-    let isTimeSelected = ref<boolean>(false);
-
     const store = useStore();
+    const currentBeautyshop = ref<Beautyshop | null>(store.getters.getBeautyshop(props.uuid));
+    const checkInDate = new Date();
+    const checkInDatePlain = ref<string>(dayjs(checkInDate).format('DD-MM-YYYY'));
+    const isTimeSelected = ref<boolean>(false);
 
     const goToInfo = () => {
       router.push({name: 'Info', params: {uuid: props.uuid}});
     }
-
-    getBeautyshop(props.uuid).then((beautyshop: Beautyshop | null) => {
-      if (!beautyshop) {
-        console.log('Не удалось получить информацию о салоне');
-        return;
-      }
-
-      currentBeautyshop.value = beautyshop;
-    });
 
     const checkInOther = () => {
       router.push({name: 'CheckIn', params: {uuid: props.uuid}});
