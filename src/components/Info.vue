@@ -7,30 +7,8 @@
       Часы работы: {{ currentBeautyshop.openHour }}:00 - {{ currentBeautyshop.closeHour }}:00
     </div>
     <div class="info-map" id="info-map" v-if="currentBeautyshop?.coordinates"></div>
-    <div v-if="isAdmin && currentBeautyshop" class="info-statistics">
-      <div class="info-statistics--title">Административная статистика</div>
-      <select>
-        <option>Сегодня</option>
-        <option>Вчера</option>
-        <option>Неделя</option>
-        <option>Месяц</option>
-        <option>Всего</option>
-      </select>
-      <div class="info-statistics--block">
-        <span>Всего записано человек</span><span>0</span>
-        <span>Оплачено услуг на сумму</span><span>0 руб.</span>
-      </div>
-      <div class="info-statistics--workers-title">Сотрудники</div>
-      <div v-for="worker in currentBeautyshop.workers" v-bind:key="worker.uuid" class="info-statistics--worker-block">
-        <div>{{ worker.fullName }}</div>
-        <div class="info-statistics--block">
-          <span>Записано человек</span><span>0</span>
-          <span>Оплачено услуг на сумму</span><span>0 руб.</span>
-        </div>
-      </div>
-    </div>
     <div class="buttons-container">
-      <button @click="goToCheckIn()">Записаться</button>
+      <button @click="goToCheckIn()">Выбрать мастера</button>
       <button @click="goToList()">Назад</button>
     </div>
   </div>
@@ -46,7 +24,6 @@ import { useStore } from '@/store';
 import dayjs from 'dayjs';
 import Utc from 'dayjs/plugin/utc';
 import { createMap } from '@/services/map';
-import { getClientDataExtended } from '@/services/auth';
 
 export default defineComponent({
   components: {CheckInPanel},
@@ -54,18 +31,10 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
     const currentBeautyshop = ref<Beautyshop | null>(store.getters.getBeautyshop(props.uuid));
-    const isAdmin = ref(false);
 
     if (currentBeautyshop.value?.coordinates) {
       createMap('info-map', currentBeautyshop.value.coordinates as number[]);
     }
-
-    currentBeautyshop.value?.admins.forEach((adminUuid: string) => {
-      // @TODO Перенести в STORE
-      if (adminUuid === getClientDataExtended()?.clientUuid) {
-        isAdmin.value = true;
-      }
-    });
 
     dayjs.extend(Utc);
 
@@ -90,7 +59,6 @@ export default defineComponent({
       currentBeautyshop,
       goToCheckIn,
       goToList,
-      isAdmin
     }
   }
 })
