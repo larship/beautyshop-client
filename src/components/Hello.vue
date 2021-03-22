@@ -1,8 +1,8 @@
 <template>
   <div class="hello-screen">
     <div v-if="currentShowState === ShowState.phone">
-      <div class="input-title">Ваш телефон:</div>
-      <template class="input-container input-container__two-rows">
+      <span class="input-title">Ваш телефон:</span>
+      <div class="input-container input-container__two-rows">
         <span>+7</span>
         <input
             v-bind:value="phoneNumber"
@@ -12,10 +12,14 @@
             placeholder="(XXX) XXX-XX-XX"
             maxlength="15"
         />
-      </template>
+      </div>
+      <span class="input-desc">
+        Телефон нужен администраторам салонов для связи с вами и подтверждения записи,
+        мы не используем его в рекламных целях.
+      </span>
       <button @click="nextStep()" v-bind:disabled="phoneNumber.length !== 15">Далее</button>
     </div>
-    <template v-if="currentShowState === ShowState.name">
+    <div v-if="currentShowState === ShowState.name">
       <div class="input-title">Как к вам обращаться?</div>
       <div class="input-container">
         <input
@@ -26,7 +30,7 @@
         />
       </div>
       <button @click="nextStep()" v-bind:disabled="name.trim().length < 3">Далее</button>
-    </template>
+    </div>
     <div class="user-agreement-info">
       Нажимая на кнопку "Далее", вы принимаете "Пользовательское соглашение"
     </div>

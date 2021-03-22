@@ -101,7 +101,7 @@ export default defineComponent({
       let clientDataEx: ExtendedClientData | null = getClientDataExtended();
 
       if (!clientDataEx) {
-        console.log('Не смогли получить информацию о клиента');
+        console.log('Не смогли получить информацию о клиенте');
         return;
       }
 

@@ -43,8 +43,8 @@ function newClient(): Promise<Client | null> {
     return Promise.resolve(null);
   }
 
-  data.append('fullName', clientPhone);
-  data.append('phone', clientName);
+  data.append('fullName', clientName);
+  data.append('phone', clientPhone);
 
   return fetch(Config.BACKEND_URL + '/client/new', {
     method: 'POST',
