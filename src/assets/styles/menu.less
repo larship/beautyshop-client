@@ -1,0 +1,28 @@
+.menu-form {
+  position: fixed;
+  left: 200px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  text-align: center;
+  background-color: #f1f1f1;
+  font-size: 14pt;
+  border-left: 1px solid #c8c8c8;
+  z-index: 1;
+
+  .menu-item {
+    padding: 15px 10px;
+    border-bottom: 1px solid #c8c8c8;
+
+    &.close {
+      text-align: right;
+    }
+
+    &.city {
+      background-image: url("~@/assets/images/city.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position-x: 100px;
+    }
+  }
+}
