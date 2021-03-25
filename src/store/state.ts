@@ -3,6 +3,7 @@ import Beautyshop from '@/models/Beautyshop';
 
 export type State = {
   loading: boolean;
+  location: string;
   checkInItem: CheckInItem | null;
   beautyshopCheckInList: CheckInItem[] | null;
   beautyshopList: Beautyshop[] | null;
@@ -11,6 +12,7 @@ export type State = {
 
 export const state: State = {
   loading: JSON.parse(localStorage.getItem('loading') ?? 'false') as boolean,
+  location: JSON.parse(localStorage.getItem('location') ?? '""'),
   checkInItem: JSON.parse(localStorage.getItem('check-in-item') ?? 'null') as CheckInItem,
   beautyshopCheckInList: [],
   beautyshopList: JSON.parse(localStorage.getItem('beautyshop-list') ?? '[]') as Beautyshop[],

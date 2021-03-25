@@ -10,6 +10,7 @@ export type Getters = {
   getIsLoading(state: State): () => boolean;
   getBeautyshopList(state: State): () => Beautyshop[] | null;
   getBeautyshop(state: State): (uuid: string) => Beautyshop | null;
+  getLocation(state: State): () => string;
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -44,5 +45,9 @@ export const getters: GetterTree<State, State> & Getters = {
     const beautyshop = beautyshopListFiltered?.[0];
 
     return beautyshop || null;
+  },
+
+  getLocation: (state: State) => () => {
+    return state.location;
   }
 }

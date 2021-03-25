@@ -12,6 +12,7 @@ export enum ActionTypes {
   GetBeautyshopList = 'GET_BEAUTYSHOP_LIST',
   AddToFavorite = 'ADD_TO_FAVORITE',
   RemoveFromFavorite = 'REMOVE_FROM_FAVORITE',
+  SetLocation = 'SET_LOCATION',
 }
 
 type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
@@ -51,6 +52,10 @@ interface RemoveFromFavoriteParams {
   beautyshopUuid: string;
 }
 
+interface SetLocationParams {
+  location: string;
+}
+
 export type Actions = {
   [ActionTypes.CreateCheckIn](context: ActionAugments, data: CreateCheckInActionParams): void;
   [ActionTypes.CancelCheckIn](context: ActionAugments, data: CancelCheckInParams): void;
@@ -58,6 +63,7 @@ export type Actions = {
   [ActionTypes.GetBeautyshopList](context: ActionAugments, data: GetBeautyshopListParams): void;
   [ActionTypes.AddToFavorite](context: ActionAugments, data: AddToFavoriteParams): void;
   [ActionTypes.RemoveFromFavorite](context: ActionAugments, data: RemoveFromFavoriteParams): void;
+  [ActionTypes.SetLocation](context: ActionAugments, data: SetLocationParams): void;
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -106,5 +112,9 @@ export const actions: ActionTree<State, State> & Actions = {
 
   [ActionTypes.RemoveFromFavorite]({commit}, data: RemoveFromFavoriteParams) {
     commit(MutationType.RemoveFromFavorite, data.beautyshopUuid);
+  },
+
+  [ActionTypes.SetLocation]({commit}, data: SetLocationParams) {
+    commit(MutationType.SetLocation, data.location);
   },
 }
