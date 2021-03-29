@@ -51,8 +51,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import router from '@/router';
-// import { checkAuth, setClientData, getClientDataExtended } from '@/services/auth';
-// import Client from '@/models/Client';
 import { useStore } from '@/store';
 import { ActionTypes } from '@/store/actions';
 import Client from '@/models/Client';

@@ -137,7 +137,7 @@ export const actions: ActionTree<State, State> & Actions = {
     commit(MutationType.SetLocation, data.location);
   },
 
-  async [ActionTypes.AuthorizeClient]({commit, getters}, data: AuthorizeClientParams): Promise<Client | null> {
+  async [ActionTypes.AuthorizeClient]({commit}, data: AuthorizeClientParams): Promise<Client | null> {
     if (!data?.clientUuid || !data?.sessionId || !data?.salt) {
       console.log('AuthorizeClient fail: недостаточно данных');
       return null;
@@ -148,7 +148,7 @@ export const actions: ActionTree<State, State> & Actions = {
     return client;
   },
 
-  async [ActionTypes.CreateNewClient]({commit, getters}, data: CreateNewClientParams): Promise<Client | null> {
+  async [ActionTypes.CreateNewClient]({commit}, data: CreateNewClientParams): Promise<Client | null> {
     if (!data?.phone || !data?.fullName) {
       console.log('CreateNewClient fail: недостаточно данных');
       return null;
