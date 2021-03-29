@@ -51,15 +51,14 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import Beautyshop from '@/models/Beautyshop';
-// import { getBeautyshop } from '@/models';
 import router from '@/router';
 import DateChooser from '@/components/DateChooser.vue';
 import TimeChooser from '@/components/TimeChooser.vue';
 import CheckInPanel from '@/components/CheckInPanel.vue';
-import { ExtendedClientData, getClientDataExtended } from '@/services/auth';
 import { ActionTypes } from '@/store/actions';
 import { useStore } from '@/store';
 import dayjs from 'dayjs';
+import Client from '@/models/Client';
 
 export default defineComponent({
   components: {TimeChooser, DateChooser, CheckInPanel},
@@ -98,7 +97,7 @@ export default defineComponent({
     }
 
     const checkIn = () => {
-      let clientDataEx: ExtendedClientData | null = getClientDataExtended();
+      let clientDataEx: Client | null = store.getters.getClient();
 
       if (!clientDataEx) {
         console.log('Не смогли получить информацию о клиенте');
@@ -112,7 +111,7 @@ export default defineComponent({
 
       store.dispatch(ActionTypes.CreateCheckIn, {
         beautyshopUuid: currentBeautyshop.value.uuid,
-        clientUuid: clientDataEx.clientUuid,
+        clientUuid: clientDataEx.uuid ?? '',
         workerUuid: workerUuid.value,
         serviceTypeUuid: serviceTypeUuid.value,
         startDate: checkInDate

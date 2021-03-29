@@ -1,9 +1,12 @@
 import CheckInItem from '@/models/CheckInItem';
 import Beautyshop from '@/models/Beautyshop';
+import Client from '@/models/Client';
+import { Config } from '@/config';
 
 export type State = {
   loading: boolean;
   location: string;
+  client: Client | null;
   checkInItem: CheckInItem | null;
   beautyshopCheckInList: CheckInItem[] | null;
   beautyshopList: Beautyshop[] | null;
@@ -12,7 +15,8 @@ export type State = {
 
 export const state: State = {
   loading: JSON.parse(localStorage.getItem('loading') ?? 'false') as boolean,
-  location: JSON.parse(localStorage.getItem('location') ?? '""'),
+  location: JSON.parse(localStorage.getItem('location') ?? '"' + Config.DEFAULT_LOCATION + '"'),
+  client: JSON.parse(localStorage.getItem('client') ?? 'null') as Client,
   checkInItem: JSON.parse(localStorage.getItem('check-in-item') ?? 'null') as CheckInItem,
   beautyshopCheckInList: [],
   beautyshopList: JSON.parse(localStorage.getItem('beautyshop-list') ?? '[]') as Beautyshop[],

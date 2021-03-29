@@ -29,7 +29,7 @@
             type="text"
         />
       </div>
-      <button @click="nextStep()" v-bind:disabled="name.trim().length < 3">Далее</button>
+      <button @click="nextStep()" v-bind:disabled="name.trim().length < 2">Далее</button>
     </div>
     <div class="user-agreement-info">
       Нажимая на кнопку "Далее", вы принимаете "Пользовательское соглашение"
@@ -40,7 +40,10 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import router from '@/router';
-import { checkAuth, setClientData, getClientData } from '@/services/auth';
+// import { checkAuth, setClientData, getClientDataExtended } from '@/services/auth';
+// import Client from '@/models/Client';
+import { useStore } from '@/store';
+import { ActionTypes } from '@/store/actions';
 import Client from '@/models/Client';
 
 enum ShowState {
@@ -51,8 +54,9 @@ enum ShowState {
 export default defineComponent({
   setup() {
     const currentShowState = ref<ShowState>(ShowState.phone);
-    const phoneNumber = ref<string>('');
-    const name = ref<string>('');
+    const phoneNumber = ref('');
+    const name = ref('');
+    const store = useStore();
 
     const phoneNumberChange = () => {
       const phone = phoneNumber.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
@@ -75,23 +79,38 @@ export default defineComponent({
           break;
 
         case ShowState.name:
-          setClientData(
-              {
-                phone: '7' + phoneNumber.value.replace(/\D/g, ''),
-                name: name.value.replace(/[^а-яА-Яa-zA-Z ]/g, '')
-              }
-          );
-          router.push({name: 'List'});
+          store.dispatch(ActionTypes.CreateNewClient, {
+            phone: '7' + phoneNumber.value.replace(/\D/g, ''),
+            fullName: name.value.replace(/[^а-яА-Яa-zA-Z ]/g, ''),
+          }).then((client: Client | null) => {
+            if (client) {
+              router.push({name: 'List'});
+              console.log('Клиент успешно создан, переходим в список салонов красоты');
+            } else {
+              console.log('Не удалось создать клиента');
+            }
+          });
+
           break;
       }
     }
 
-    checkAuth().then((client: Client | null) => {
-      if (client && getClientData()) {
-        // В этом случае экран приветствия не нужен, сразу перебросим на список
-        router.push({name: 'List'});
-      }
-    });
+    const client = store.getters.getClient();
+
+    if (client?.uuid && client?.sessionId && client?.salt) {
+      store.dispatch(ActionTypes.AuthorizeClient, {
+        clientUuid: client.uuid,
+        sessionId: client.sessionId,
+        salt: client.salt,
+      }).then((client: Client | null) => {
+        if (client) {
+          router.push({name: 'List'});
+          console.log('Клиент успешно авторизован, переходим в список салонов красоты');
+        } else {
+          console.log('Не удалось авторизовать клиента');
+        }
+      });
+    }
 
     return {
       ShowState,

@@ -4,6 +4,8 @@ import { State } from './state';
 import { cancelCheckIn, createCheckIn, getBeautyshopCheckInList } from '@/services/checkIn';
 import CheckInItem from '@/models/CheckInItem';
 import { getBeautyshopList } from '@/models';
+import { authClient, newClient } from '@/services/auth';
+import Client from '@/models/Client';
 
 export enum ActionTypes {
   CreateCheckIn = 'CREATE_CHECK_IN',
@@ -13,6 +15,8 @@ export enum ActionTypes {
   AddToFavorite = 'ADD_TO_FAVORITE',
   RemoveFromFavorite = 'REMOVE_FROM_FAVORITE',
   SetLocation = 'SET_LOCATION',
+  AuthorizeClient = 'AUTHORIZE_CLIENT',
+  CreateNewClient = 'CREATE_NEW_CLIENT',
 }
 
 type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
@@ -56,6 +60,19 @@ interface SetLocationParams {
   location: string;
 }
 
+interface AuthorizeClientParams {
+  clientUuid?: string;
+  phone?: string;
+  fullName?: string;
+  sessionId?: string;
+  salt?: string;
+}
+
+interface CreateNewClientParams {
+  phone?: string;
+  fullName?: string;
+}
+
 export type Actions = {
   [ActionTypes.CreateCheckIn](context: ActionAugments, data: CreateCheckInActionParams): void;
   [ActionTypes.CancelCheckIn](context: ActionAugments, data: CancelCheckInParams): void;
@@ -64,6 +81,8 @@ export type Actions = {
   [ActionTypes.AddToFavorite](context: ActionAugments, data: AddToFavoriteParams): void;
   [ActionTypes.RemoveFromFavorite](context: ActionAugments, data: RemoveFromFavoriteParams): void;
   [ActionTypes.SetLocation](context: ActionAugments, data: SetLocationParams): void;
+  [ActionTypes.AuthorizeClient](context: ActionAugments, data: AuthorizeClientParams): Promise<Client | null>;
+  [ActionTypes.CreateNewClient](context: ActionAugments, data: CreateNewClientParams): Promise<Client | null>;
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -116,5 +135,27 @@ export const actions: ActionTree<State, State> & Actions = {
 
   [ActionTypes.SetLocation]({commit}, data: SetLocationParams) {
     commit(MutationType.SetLocation, data.location);
+  },
+
+  async [ActionTypes.AuthorizeClient]({commit, getters}, data: AuthorizeClientParams): Promise<Client | null> {
+    if (!data?.clientUuid || !data?.sessionId || !data?.salt) {
+      console.log('AuthorizeClient fail: недостаточно данных');
+      return null;
+    }
+
+    const client = await authClient(data.clientUuid, data.sessionId, data.salt);
+    commit(MutationType.SetClient, client);
+    return client;
+  },
+
+  async [ActionTypes.CreateNewClient]({commit, getters}, data: CreateNewClientParams): Promise<Client | null> {
+    if (!data?.phone || !data?.fullName) {
+      console.log('CreateNewClient fail: недостаточно данных');
+      return null;
+    }
+
+    const client = await newClient(data.phone, data.fullName);
+    commit(MutationType.SetClient, client);
+    return client;
   },
 }
