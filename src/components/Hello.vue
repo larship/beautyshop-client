@@ -31,6 +31,17 @@
       </div>
       <button @click="nextStep()" v-bind:disabled="name.trim().length < 2">Далее</button>
     </div>
+    <div v-if="currentShowState === ShowState.city">
+      <div class="input-title">Выберите ваш город</div>
+      <div class="input-container">
+        <select v-model="selectedCity">
+          <option v-for="cityName in cityList" v-bind:value="cityName" v-bind:key="cityName">
+            {{ cityName }}
+          </option>
+        </select>
+      </div>
+      <button @click="nextStep()" v-bind:disabled="!selectedCity">Далее</button>
+    </div>
     <div class="user-agreement-info">
       Нажимая на кнопку "Далее", вы принимаете "Пользовательское соглашение"
     </div>
@@ -38,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import router from '@/router';
 // import { checkAuth, setClientData, getClientDataExtended } from '@/services/auth';
 // import Client from '@/models/Client';
@@ -49,6 +60,7 @@ import Client from '@/models/Client';
 enum ShowState {
   phone = 1,
   name = 2,
+  city = 3,
 }
 
 export default defineComponent({
@@ -56,7 +68,14 @@ export default defineComponent({
     const currentShowState = ref<ShowState>(ShowState.phone);
     const phoneNumber = ref('');
     const name = ref('');
+    const selectedCity = ref('');
     const store = useStore();
+    const cityList = [
+      'Москва',
+      'Санкт-Петербург',
+      'Новосибирск',
+      'Владивосток'
+    ];
 
     const phoneNumberChange = () => {
       const phone = phoneNumber.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
@@ -79,6 +98,13 @@ export default defineComponent({
           break;
 
         case ShowState.name:
+          currentShowState.value = ShowState.city;
+          break;
+
+        case ShowState.city:
+          store.dispatch(ActionTypes.SetLocation, {
+            location: selectedCity.value
+          });
           store.dispatch(ActionTypes.CreateNewClient, {
             phone: '7' + phoneNumber.value.replace(/\D/g, ''),
             fullName: name.value.replace(/[^а-яА-Яa-zA-Z ]/g, ''),
@@ -117,6 +143,8 @@ export default defineComponent({
       currentShowState,
       phoneNumber,
       name,
+      selectedCity,
+      cityList,
       phoneNumberChange,
       nameChange,
       nextStep,
