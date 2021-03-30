@@ -1,19 +1,22 @@
 <template>
   <div class="app-container">
     <Menu v-bind:is-open="isMenuOpen" @closed="isMenuOpen = false"></Menu>
-    <header>
+    <header v-if="needShowHeader">
       <div class="header--title">
-        Каталог - {{ location }}
+        <span>{{ routeTitle }}</span>
         <button class="menu-button" @click="isMenuOpen = true"></button>
       </div>
     </header>
     <router-view/>
   </div>
 </template>
-<script>
-import Menu from "@/components/Menu";
-import {computed, defineComponent, ref, watch} from "vue";
-import {useStore} from "@/store";
+
+<script lang="ts">
+import { computed, defineComponent, ref, watch } from 'vue';
+import { useStore } from '@/store';
+import router from '@/router';
+import Menu from '@/components/Menu.vue';
+import { RouteLocationNormalizedLoaded } from 'vue-router';
 
 export default defineComponent({
   components: {Menu},
@@ -21,17 +24,46 @@ export default defineComponent({
     const isMenuOpen = ref(false);
     const store = useStore();
     const location = computed(() => store.getters.getLocation());
+    const currentRoute = computed(() => router.currentRoute.value);
+    const needShowHeader = ref(false);
+
+    const getRouteTitle = (route: RouteLocationNormalizedLoaded) => {
+      switch (route.name) {
+        case 'List':
+          return 'Каталог - ' + store.getters.getLocation();
+
+        case 'Info':
+        case 'CheckIn': {
+          let beautyshop = store.getters.getBeautyshop(route.params.uuid as string);
+          return beautyshop?.name ?? 'Информация о салоне';
+        }
+      }
+
+      return '';
+    };
+
+    const routeTitle = ref(getRouteTitle(currentRoute.value));
 
     watch(
-      location,
-      (value) => {
-        console.log('LOCATION LOCATION LOCATION:', value);
-      }
-    )
+        currentRoute,
+        (value) => {
+          routeTitle.value = getRouteTitle(value);
+          needShowHeader.value = value.name != 'Hello';
+        }
+    );
+
+    watch(
+        location,
+        () => {
+          routeTitle.value = getRouteTitle(router.currentRoute.value);
+        }
+    );
 
     return {
+      needShowHeader,
       isMenuOpen,
-      location
+      location,
+      routeTitle,
     }
   }
 })
