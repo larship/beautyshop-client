@@ -18,6 +18,8 @@
       <div class="mode-switcher">
         <span @click="currentShowState = ShowState.all"
               v-bind:class="{ 'selected': currentShowState === ShowState.all }">Все</span>
+        <span @click="currentShowState = ShowState.map"
+              v-bind:class="{ 'selected': currentShowState === ShowState.map }">Карта</span>
         <span @click="currentShowState = ShowState.favorite"
               v-bind:class="{ 'selected': currentShowState === ShowState.favorite }">Избранные</span>
       </div>
@@ -35,7 +37,8 @@ import { ActionTypes } from '@/store/actions';
 
 enum ShowState {
   all = 1,
-  favorite = 2,
+  map = 2,
+  favorite = 3,
 }
 
 export default defineComponent({
@@ -47,11 +50,9 @@ export default defineComponent({
       return store.getters.getIsLoading();
     });
     const beautyshopsList = computed(() => {
-      const items = store.getters.getBeautyshopList()?.filter((beautyshop: Beautyshop) => {
+      return store.getters.getBeautyshopList()?.filter((beautyshop: Beautyshop) => {
         return currentShowState.value === ShowState.all || beautyshop.favorite;
       });
-
-      return items;
     });
     const openBeautyshop = (beautyshop: Beautyshop) => {
       router.push({name: 'Info', params: {uuid: beautyshop.uuid}});
