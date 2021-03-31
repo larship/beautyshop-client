@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { defineComponent, computed } from 'vue';
 import { useStore } from '@/store';
 import CheckInItem from '@/models/CheckInItem';
@@ -23,8 +23,8 @@ export default defineComponent({
     dayjs.extend(UpdateLocale);
     dayjs.updateLocale('en', {
       months: [
-        "января", "февраля", "марта", "апреля", "мая", "июня", "июля",
-        "августа", "сентября", "октября", "ноября", "декабря"
+        'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля',
+        'августа', 'сентября', 'октября', 'ноября', 'декабря'
       ]
     });
 

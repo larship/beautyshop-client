@@ -5,23 +5,19 @@
       Записать другого человека (перейти на эту же страницу) &gt;
     </div>
     <div class="data-choose-row">
-      <div class="data-choose-row--title">Мастер:</div>
-      <select v-model="workerUuid">
-        <option v-for="worker in currentBeautyshop?.workers" v-bind:value="worker.uuid" v-bind:key="worker.uuid">
-          {{ worker.fullName }}
+      <div class="data-choose-row--title">Услуга:</div>
+      <select v-model="selectedServiceName">
+        <option v-for="serviceName in servicesList" v-bind:value="serviceName" v-bind:key="serviceName">
+          {{ serviceName }}
         </option>
       </select>
     </div>
     <div class="data-choose-row">
-      <div class="data-choose-row--title">Услуга:</div>
-      <select v-model="serviceTypeUuid">
-        <template v-for="worker in currentBeautyshop?.workers">
-          <template v-if="workerUuid === worker.uuid">
-            <option v-for="serviceType in worker.services" v-bind:value="serviceType.uuid"
-                    v-bind:key="serviceType.uuid">{{ serviceType.name }} &ndash; {{ serviceType.price }} руб.
-            </option>
-          </template>
-        </template>
+      <div class="data-choose-row--title">Мастер:</div>
+      <select v-model="selectedWorker">
+        <option v-for="worker in workersList" v-bind:value="worker" v-bind:key="worker.uuid">
+          {{ worker.fullName }}
+        </option>
       </select>
     </div>
     <div class="data-choose-row">
@@ -41,7 +37,7 @@
       </TimeChooser>
     </div>
     <div class="buttons-container">
-      <button @click="checkIn()" v-bind:disabled="!workerUuid || !serviceTypeUuid || !isTimeSelected">Записаться
+      <button @click="checkIn()" v-bind:disabled="!selectedWorker || !selectedServiceName || !isTimeSelected">Записаться
       </button>
       <button @click="goToInfo()">Назад</button>
     </div>
@@ -49,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue';
+import { ref, defineComponent, computed } from 'vue';
 import Beautyshop from '@/models/Beautyshop';
 import router from '@/router';
 import DateChooser from '@/components/DateChooser.vue';
@@ -59,20 +55,66 @@ import { ActionTypes } from '@/store/actions';
 import { useStore } from '@/store';
 import dayjs from 'dayjs';
 import Client from '@/models/Client';
+import Worker from '@/models/Worker';
 
 export default defineComponent({
   components: {TimeChooser, DateChooser, CheckInPanel},
   props: ['uuid'],
   setup(props) {
-    const isLoading = ref<boolean>(false);
-    const workerUuid = ref<string>('');
-    const serviceTypeUuid = ref<string>('');
-    const workersList = ref<object>([]);
     const store = useStore();
     const currentBeautyshop = ref<Beautyshop | null>(store.getters.getBeautyshop(props.uuid));
     const checkInDate = new Date();
     const checkInDatePlain = ref<string>(dayjs(checkInDate).format('DD-MM-YYYY'));
     const isTimeSelected = ref<boolean>(false);
+    const selectedServiceName = ref('');
+    const selectedWorker = ref<Worker | null>(null);
+
+    const servicesList = computed(() => {
+      let items: string[] = [];
+      currentBeautyshop.value?.workers.forEach((worker) => {
+
+        console.log('selectedWorker.value.uuid:', selectedWorker.value);
+        if (!selectedWorker.value || selectedWorker.value.uuid === worker.uuid) {
+          worker.services?.forEach((serviceType) => {
+            if (items.indexOf(serviceType.name) === -1) {
+              items.push(serviceType.name);
+            }
+          });
+        }
+      });
+
+      return items;
+    });
+
+    const workersList = computed(() => {
+      let items: Worker[] = [];
+      currentBeautyshop.value?.workers.forEach((worker) => {
+        let hasServiceType = false;
+
+        worker.services?.forEach((serviceType) => {
+          if (serviceType.name === selectedServiceName.value || selectedServiceName.value === '') {
+            hasServiceType = true;
+          }
+        });
+
+        if (hasServiceType) {
+          items.push(worker);
+        }
+      });
+
+      return items;
+    });
+
+    const serviceTypeUuid = computed<string | null>(() => {
+      let uuid: string | null = null;
+      selectedWorker.value?.services.forEach((serviceType) => {
+        if (serviceType.name === selectedServiceName.value) {
+          uuid = serviceType.uuid;
+        }
+      });
+
+      return uuid;
+    });
 
     const goToInfo = () => {
       router.push({name: 'Info', params: {uuid: props.uuid}});
@@ -86,14 +128,11 @@ export default defineComponent({
       checkInDate.setFullYear(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
       checkInDatePlain.value = dayjs(checkInDate).format('DD-MM-YYYY');
       isTimeSelected.value = false;
-
-      console.log('checkInDate update: ', checkInDate);
     }
 
     const onTimeChange = (currentTime: Date) => {
       checkInDate.setHours(currentTime.getHours(), currentTime.getMinutes(), 0, 0);
       isTimeSelected.value = true;
-      console.log('currentTime:', currentTime);
     }
 
     const checkIn = () => {
@@ -109,26 +148,35 @@ export default defineComponent({
         return;
       }
 
+      if (!selectedWorker.value || !serviceTypeUuid.value || !isTimeSelected.value) {
+        console.log('Не были заполнены необходимые данные');
+        return;
+      }
+
+      if (serviceTypeUuid.value == null) {
+        return;
+      }
+
       store.dispatch(ActionTypes.CreateCheckIn, {
         beautyshopUuid: currentBeautyshop.value.uuid,
         clientUuid: clientDataEx.uuid ?? '',
-        workerUuid: workerUuid.value,
+        workerUuid: selectedWorker.value.uuid,
         serviceTypeUuid: serviceTypeUuid.value,
         startDate: checkInDate
       });
 
       console.log('Создана запись в салон красоты');
 
-      serviceTypeUuid.value = '';
-      workerUuid.value = '';
+      selectedServiceName.value = '';
+      selectedWorker.value = null;
       isTimeSelected.value = false;
     }
 
     return {
-      isLoading,
       currentBeautyshop,
-      workerUuid,
-      serviceTypeUuid,
+      selectedWorker,
+      servicesList,
+      selectedServiceName,
       workersList,
       isTimeSelected,
       onDateChange,
