@@ -5,7 +5,7 @@
       Записать другого человека (перейти на эту же страницу) &gt;
     </div>
     <div class="data-choose-row">
-      <div class="data-choose-row--title">Услуга:</div>
+      <span class="data-choose-row--title">Услуга:</span>
       <select v-model="selectedServiceName">
         <option v-for="serviceName in servicesList" v-bind:value="serviceName" v-bind:key="serviceName">
           {{ serviceName }}
@@ -13,7 +13,7 @@
       </select>
     </div>
     <div class="data-choose-row">
-      <div class="data-choose-row--title">Мастер:</div>
+      <span class="data-choose-row--title">Мастер:</span>
       <select v-model="selectedWorker">
         <option v-for="worker in workersList" v-bind:value="worker" v-bind:key="worker.uuid">
           {{ worker.fullName }}
@@ -21,11 +21,11 @@
       </select>
     </div>
     <div class="data-choose-row">
-      <div class="data-choose-row--title">Дата:</div>
+      <span class="data-choose-row--title">Дата:</span>
       <DateChooser @dateChange="onDateChange"></DateChooser>
     </div>
     <div class="data-choose-row">
-      <div class="data-choose-row--title">Время:</div>
+      <span class="data-choose-row--title">Время:</span>
       <TimeChooser
           v-bind:is-time-selected="isTimeSelected"
           v-bind:selected-date-item="checkInDatePlain"
@@ -35,6 +35,12 @@
           v-if="currentBeautyshop"
       >
       </TimeChooser>
+    </div>
+    <div class="data-choose-row">
+      <span class="data-choose-row--title">Стоимость:</span>
+      <div>
+        <span class="price">{{ price }} <span class="price--currency">рублей</span></span>
+      </div>
     </div>
     <div class="buttons-container">
       <button @click="checkIn()" v-bind:disabled="!selectedWorker || !selectedServiceName || !isTimeSelected">Записаться
@@ -71,11 +77,9 @@ export default defineComponent({
 
     const servicesList = computed(() => {
       let items: string[] = [];
-      currentBeautyshop.value?.workers.forEach((worker) => {
-
-        console.log('selectedWorker.value.uuid:', selectedWorker.value);
+      currentBeautyshop.value?.workers.forEach(worker => {
         if (!selectedWorker.value || selectedWorker.value.uuid === worker.uuid) {
-          worker.services?.forEach((serviceType) => {
+          worker.services?.forEach(serviceType => {
             if (items.indexOf(serviceType.name) === -1) {
               items.push(serviceType.name);
             }
@@ -88,10 +92,10 @@ export default defineComponent({
 
     const workersList = computed(() => {
       let items: Worker[] = [];
-      currentBeautyshop.value?.workers.forEach((worker) => {
+      currentBeautyshop.value?.workers.forEach(worker => {
         let hasServiceType = false;
 
-        worker.services?.forEach((serviceType) => {
+        worker.services?.forEach(serviceType => {
           if (serviceType.name === selectedServiceName.value || selectedServiceName.value === '') {
             hasServiceType = true;
           }
@@ -107,13 +111,53 @@ export default defineComponent({
 
     const serviceTypeUuid = computed<string | null>(() => {
       let uuid: string | null = null;
-      selectedWorker.value?.services.forEach((serviceType) => {
+      selectedWorker.value?.services.forEach(serviceType => {
         if (serviceType.name === selectedServiceName.value) {
           uuid = serviceType.uuid;
         }
       });
 
       return uuid;
+    });
+
+    const price = computed(() => {
+      let price = '-';
+
+      if (selectedServiceName.value) {
+        if (selectedWorker.value) {
+          // Точная цена
+          let serviceType = selectedWorker.value.services.find(serviceType => {
+            return serviceType.uuid === serviceTypeUuid.value;
+          });
+
+          if (serviceType) {
+            price = '' + serviceType.price;
+          }
+        } else {
+          // Интервал цен
+          let min = 0, max = 0;
+
+          currentBeautyshop.value?.workers.forEach(worker => {
+            worker.services?.forEach(serviceType => {
+              if (serviceType.name === selectedServiceName.value) {
+                if (min === 0 && max === 0) {
+                  min = serviceType.price;
+                  max = serviceType.price;
+                } else {
+                  min = serviceType.price < min ? serviceType.price : min;
+                  max = serviceType.price > max ? serviceType.price : max;
+                }
+              }
+            })
+          });
+
+          console.log(min, max);
+
+          price = (min === max) ? '' + min : min + ' - ' + max;
+        }
+      }
+
+      return price;
     });
 
     const goToInfo = () => {
@@ -153,10 +197,6 @@ export default defineComponent({
         return;
       }
 
-      if (serviceTypeUuid.value == null) {
-        return;
-      }
-
       store.dispatch(ActionTypes.CreateCheckIn, {
         beautyshopUuid: currentBeautyshop.value.uuid,
         clientUuid: clientDataEx.uuid ?? '',
@@ -179,6 +219,7 @@ export default defineComponent({
       selectedServiceName,
       workersList,
       isTimeSelected,
+      price,
       onDateChange,
       onTimeChange,
       checkInOther,
