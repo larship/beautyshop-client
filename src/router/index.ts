@@ -4,6 +4,7 @@ import List from '@/components/List.vue';
 import ApiTest from '@/components/ApiTest.vue';
 import CheckIn from '@/components/CheckIn.vue';
 import Info from '@/components/Info.vue';
+import CheckInList from '@/components/user/CheckInList.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -27,6 +28,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Info',
     component: Info,
     props: true
+  },
+  {
+    path: '/user/check-in-list',
+    name: 'UserCheckInList',
+    component: CheckInList,
   },
   {
     path: '/api-test',

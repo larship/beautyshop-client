@@ -37,6 +37,9 @@ export default defineComponent({
           let beautyshop = store.getters.getBeautyshop(route.params.uuid as string);
           return beautyshop?.name ?? 'Информация о салоне';
         }
+
+        case 'UserCheckInList':
+          return 'Мои записи';
       }
 
       return '';
