@@ -3,7 +3,7 @@ import { Mutations, MutationType } from './mutations';
 import { State } from './state';
 import { cancelCheckIn, createCheckIn, getBeautyshopCheckInList } from '@/services/checkIn';
 import CheckInItem from '@/models/CheckInItem';
-import { getBeautyshopList } from '@/models';
+import { getBeautyshopList } from '@/services/beautyshop';
 import { authClient, newClient } from '@/services/auth';
 import Client from '@/models/Client';
 

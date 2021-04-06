@@ -1,5 +1,5 @@
 import CheckInItem from '@/models/CheckInItem';
-import { fetchDataList, sendData } from '@/models';
+import { fetchDataList, sendData } from '@/api';
 
 interface CreateCheckInRequestParams {
   beautyshopUuid: string;

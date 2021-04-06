@@ -19,10 +19,12 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
-import { getBeautyshopList, getWorkers, getServiceTypes } from '@/models';
 import Beautyshop from '@/models/Beautyshop';
 import Worker from '@/models/Worker';
 import ServiceType from '@/models/ServiceType';
+import { getBeautyshopList } from '@/services/beautyshop';
+import { getWorkers } from '@/services/worker';
+import { getServiceTypes } from '@/services/serviceType';
 
 export default defineComponent({
   setup() {
