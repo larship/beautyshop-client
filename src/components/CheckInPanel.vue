@@ -17,15 +17,13 @@ import CheckInItem from '@/models/CheckInItem';
 import dayjs from 'dayjs';
 import UpdateLocale from 'dayjs/plugin/updateLocale';
 import { ActionTypes } from '@/store/actions';
+import { MonthNameList } from '@/services/lang';
 
 export default defineComponent({
   setup() {
     dayjs.extend(UpdateLocale);
     dayjs.updateLocale('en', {
-      months: [
-        'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля',
-        'августа', 'сентября', 'октября', 'ноября', 'декабря'
-      ]
+      months: MonthNameList
     });
 
     const store = useStore();

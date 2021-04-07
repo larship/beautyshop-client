@@ -11,6 +11,7 @@ import { ref, defineComponent } from 'vue';
 import dayjs from 'dayjs';
 import UpdateLocale from 'dayjs/plugin/updateLocale';
 import IsSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import { MonthNameList } from '@/services/lang';
 
 export default defineComponent({
   emits: ['dateChange'],
@@ -18,10 +19,7 @@ export default defineComponent({
     dayjs.extend(UpdateLocale);
     dayjs.extend(IsSameOrAfter);
     dayjs.updateLocale('en', {
-      months: [
-        "января", "февраля", "марта", "апреля", "мая", "июня", "июля",
-        "августа", "сентября", "октября", "ноября", "декабря"
-      ]
+      months: MonthNameList
     });
 
     let selectedDate = dayjs();
