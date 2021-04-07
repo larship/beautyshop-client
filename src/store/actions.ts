@@ -1,7 +1,7 @@
 import { ActionContext, ActionTree } from 'vuex';
 import { Mutations, MutationType } from './mutations';
 import { State } from './state';
-import { cancelCheckIn, createCheckIn, getBeautyshopCheckInList } from '@/services/checkIn';
+import { cancelCheckIn, createCheckIn, getBeautyshopCheckInList, getClientCheckInList } from '@/services/checkIn';
 import CheckInItem from '@/models/CheckInItem';
 import { getBeautyshopList } from '@/services/beautyshop';
 import { authClient, newClient } from '@/services/auth';
@@ -10,6 +10,7 @@ import Client from '@/models/Client';
 export enum ActionTypes {
   CreateCheckIn = 'CREATE_CHECK_IN',
   CancelCheckIn = 'CANCEL_CHECK_IN',
+  GetClientCheckInList = 'GET_CLIENT_CHECK_IN_LIST',
   GetBeautyshopCheckInList = 'GET_BEAUTYSHOP_CHECKIN_LIST',
   GetBeautyshopList = 'GET_BEAUTYSHOP_LIST',
   AddToFavorite = 'ADD_TO_FAVORITE',
@@ -36,6 +37,10 @@ interface CreateCheckInActionParams {
 
 interface CancelCheckInParams {
   checkInUuid: string;
+}
+
+interface GetClientCheckInListParams {
+  clientUuid: string;
 }
 
 interface GetBeautyshopCheckInListParams {
@@ -76,6 +81,7 @@ interface CreateNewClientParams {
 export type Actions = {
   [ActionTypes.CreateCheckIn](context: ActionAugments, data: CreateCheckInActionParams): void;
   [ActionTypes.CancelCheckIn](context: ActionAugments, data: CancelCheckInParams): void;
+  [ActionTypes.GetClientCheckInList](context: ActionAugments, data: GetClientCheckInListParams): void;
   [ActionTypes.GetBeautyshopCheckInList](context: ActionAugments, data: GetBeautyshopCheckInListParams): void;
   [ActionTypes.GetBeautyshopList](context: ActionAugments, data: GetBeautyshopListParams): void;
   [ActionTypes.AddToFavorite](context: ActionAugments, data: AddToFavoriteParams): void;
@@ -107,11 +113,20 @@ export const actions: ActionTree<State, State> & Actions = {
     commit(MutationType.SetLoading, false);
   },
 
+  async [ActionTypes.GetClientCheckInList]({commit}, data: GetClientCheckInListParams) {
+    commit(MutationType.SetLoading, true);
+
+    let checkInList = await getClientCheckInList(data.clientUuid);
+    commit(MutationType.SetCheckInList, checkInList);
+
+    commit(MutationType.SetLoading, false);
+  },
+
   async [ActionTypes.GetBeautyshopCheckInList]({commit}, data: GetBeautyshopCheckInListParams) {
     commit(MutationType.SetLoading, true);
 
     let checkInList = await getBeautyshopCheckInList(data.beautyshopUuid, data.dateFrom, data.dateTo);
-    commit(MutationType.SetBeautyshopCheckInList, checkInList);
+    commit(MutationType.SetCheckInList, checkInList);
 
     commit(MutationType.SetLoading, false);
   },

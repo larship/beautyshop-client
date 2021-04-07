@@ -8,7 +8,7 @@ export enum MutationType {
   CreateCheckIn = 'CREATE_CHECK_IN',
   CancelCheckIn = 'CANCEL_CHECK_IN',
   SetLoading = 'SET_LOADING',
-  SetBeautyshopCheckInList = 'SET_BEAUTYSHOP_CHECKIN_LIST',
+  SetCheckInList = 'SET_CHECKIN_LIST',
   SetBeautyshopList = 'SET_BEAUTYSHOP_LIST',
   AddToFavorite = 'ADD_TO_FAVORITE',
   RemoveFromFavorite = 'REMOVE_FROM_FAVORITE',
@@ -20,7 +20,7 @@ export type Mutations = {
   [MutationType.CreateCheckIn](state: State, checkInItem: CheckInItem | null): void;
   [MutationType.CancelCheckIn](state: State, checkInItem: CheckInItem | null): void;
   [MutationType.SetLoading](state: State, value: boolean): void;
-  [MutationType.SetBeautyshopCheckInList](state: State, list: CheckInItem[] | null): void;
+  [MutationType.SetCheckInList](state: State, list: CheckInItem[] | null): void;
   [MutationType.SetBeautyshopList](state: State, list: Beautyshop[] | null): void;
   [MutationType.AddToFavorite](state: State, beautyshopUuid: string): void;
   [MutationType.RemoveFromFavorite](state: State, beautyshopUuid: string): void;
@@ -44,8 +44,8 @@ export const mutations: MutationTree<State> & Mutations = {
     localStorage.setItem('loading', JSON.stringify(value));
   },
 
-  [MutationType.SetBeautyshopCheckInList](state, value) {
-    state.beautyshopCheckInList = value;
+  [MutationType.SetCheckInList](state, value) {
+    state.checkInList = value;
   },
 
   [MutationType.SetBeautyshopList](state, value) {

@@ -31,6 +31,15 @@ export async function getBeautyshopCheckInList(beautyshopUuid: string, dateFrom:
     dateFrom,
     dateTo
 
-  })
+  });
+
   return await fetchDataList<CheckInItem>('/check-in/list-for-beautyshop?' + params.toString());
+}
+
+export async function getClientCheckInList(clientUuid: string): Promise<CheckInItem[] | null> {
+  const params = new URLSearchParams({
+    uuid: clientUuid,
+  });
+
+  return await fetchDataList<CheckInItem>('/check-in/list-for-client?' + params.toString());
 }

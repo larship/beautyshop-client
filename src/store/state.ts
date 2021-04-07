@@ -8,7 +8,7 @@ export type State = {
   location: string;
   client: Client | null;
   checkInItem: CheckInItem | null;
-  beautyshopCheckInList: CheckInItem[] | null;
+  checkInList: CheckInItem[] | null;
   beautyshopList: Beautyshop[] | null;
   beautyshopFavoriteList: string[];
 };
@@ -18,7 +18,7 @@ export const state: State = {
   location: JSON.parse(localStorage.getItem('location') ?? '"' + Config.DEFAULT_LOCATION + '"'),
   client: JSON.parse(localStorage.getItem('client') ?? 'null') as Client,
   checkInItem: JSON.parse(localStorage.getItem('check-in-item') ?? 'null') as CheckInItem,
-  beautyshopCheckInList: [],
+  checkInList: [],
   beautyshopList: JSON.parse(localStorage.getItem('beautyshop-list') ?? '[]') as Beautyshop[],
   beautyshopFavoriteList: JSON.parse(localStorage.getItem('favorite-list') ?? '[]') as string[],
 };

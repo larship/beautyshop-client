@@ -14,10 +14,13 @@ import { ActionTypes } from '@/store/actions';
 export default defineComponent({
   setup() {
     const store = useStore();
+    const client = store.getters.getClient();
 
-    store.dispatch(ActionTypes.GetBeautyshopList, {
-      location: store.getters.getLocation()
-    });
+    if (client) {
+      store.dispatch(ActionTypes.GetClientCheckInList, {
+        clientUuid: client.uuid
+      });
+    }
 
     return {}
   }

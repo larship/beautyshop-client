@@ -53,7 +53,7 @@ export default defineComponent({
     }
 
     console.log('currentBeautyshop:', currentBeautyshop);
-    console.log('CheckInList:', store.getters.getBeautyshopCheckInList());
+    console.log('CheckInList:', store.getters.getCheckInList());
 
     return {
       currentBeautyshop,
