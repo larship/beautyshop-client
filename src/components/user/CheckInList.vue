@@ -2,9 +2,18 @@
   <div class="user-check-in-list-screen">
     <div class="check-in-list">
       <div v-for="checkInItem in checkInList" v-bind:key="checkInItem.uuid" class="check-in-item">
-        {{ checkInItem.beautyshopName }}<br>
-        {{ checkInItem.serviceTypeName }}, {{ checkInItem.startDate }}, {{ checkInItem.price }} рублей
+        <div>
+          {{ checkInItem.beautyshopName }}<br>
+          {{ checkInItem.serviceTypeName }} - {{ checkInItem.workerName }}
+        </div>
+        <div>
+          {{ checkInItem.startDate }}<br>
+          {{ checkInItem.price }} рублей
+        </div>
       </div>
+    </div>
+    <div class="buttons-container buttons-container--single">
+      <button @click="goBack()">Назад</button>
     </div>
   </div>
 </template>
@@ -17,10 +26,12 @@ import CheckInItem from '@/models/CheckInItem';
 import dayjs from 'dayjs';
 import UpdateLocale from 'dayjs/plugin/updateLocale';
 import { MonthNameList } from '@/services/lang';
+import router from '@/router';
 
 interface CheckInViewItem {
   beautyshopName: string;
   serviceTypeName: string;
+  workerName: string;
   startDate: string;
   price: string;
 }
@@ -45,11 +56,16 @@ export default defineComponent({
         return {
           beautyshopName: checkInItem.beautyshop.name,
           serviceTypeName: checkInItem.serviceType.name,
+          workerName: checkInItem.worker.fullName,
           startDate: dayjs(checkInItem.startDate).format('D MMMM, HH:mm'),
           price: checkInItem.price as unknown as string
         };
       });
     });
+
+    const goBack = () => {
+      router.back();
+    }
 
     if (client) {
       store.dispatch(ActionTypes.GetClientCheckInList, {
@@ -58,7 +74,8 @@ export default defineComponent({
     }
 
     return {
-      checkInList
+      checkInList,
+      goBack
     }
   }
 })
