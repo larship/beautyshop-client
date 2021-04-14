@@ -33,7 +33,10 @@ export default defineComponent({
     const currentBeautyshop = ref<Beautyshop | null>(store.getters.getBeautyshop(props.uuid));
 
     if (currentBeautyshop.value?.coordinates) {
-      createMap('info-map', currentBeautyshop.value.coordinates as number[]);
+      createMap('info-map', [{
+        title: '',
+        coordinates: currentBeautyshop.value.coordinates as number[],
+      }]);
     }
 
     dayjs.extend(Utc);

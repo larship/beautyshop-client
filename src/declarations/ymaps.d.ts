@@ -13,9 +13,10 @@ declare module ymaps {
   }
 
   export class MapState {
-    center: number[];
-    zoom: number;
+    center?: number[];
+    zoom?: number;
     controls?: string[];
+    bounds?: number[][];
   }
 
   export class GeoObjectCollection {
@@ -24,5 +25,16 @@ declare module ymaps {
 
   export class Placemark {
     constructor(coordinates: number[], properties?: object);
+  }
+
+  interface CenterAndZoom {
+    center: number[];
+    zoom: number;
+  }
+
+  export class util {
+    static bounds: {
+      getCenterAndZoom(bounds: number[][], containerSize: number[]): CenterAndZoom;
+    }
   }
 }

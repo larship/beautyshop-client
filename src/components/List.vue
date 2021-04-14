@@ -14,6 +14,9 @@
               v-if="beautyshop.favorite">&#9733;</span>
       </div>
     </div>
+    <div class="beautyshop-map" id="list-map">
+
+    </div>
     <footer>
       <div class="mode-switcher">
         <span @click="currentShowState = ShowState.all"
@@ -34,6 +37,7 @@ import Beautyshop from '@/models/Beautyshop';
 import router from '@/router';
 import { useStore } from '@/store';
 import { ActionTypes } from '@/store/actions';
+import { createMap } from '@/services/map';
 
 enum ShowState {
   all = 1,
@@ -51,12 +55,23 @@ export default defineComponent({
     });
     const beautyshopsList = computed(() => {
       return store.getters.getBeautyshopList()?.filter((beautyshop: Beautyshop) => {
-        return currentShowState.value === ShowState.all || beautyshop.favorite;
+        return (currentShowState.value === ShowState.all || beautyshop.favorite) && currentShowState.value !== ShowState.map;
       });
     });
     const openBeautyshop = (beautyshop: Beautyshop) => {
       router.push({name: 'Info', params: {uuid: beautyshop.uuid}});
     }
+
+    const mapObjects = beautyshopsList.value ? beautyshopsList.value.map(beautyshop => {
+      return {
+        coordinates: beautyshop.coordinates as number[],
+        title: beautyshop.name
+      }
+    }).filter((mapObject) => mapObject.coordinates) : [];
+
+    console.log(mapObjects);
+
+    createMap('list-map', mapObjects);
 
     const setFavorite = (beautyshop: Beautyshop, state: boolean) => {
       beautyshop.favorite = state;
