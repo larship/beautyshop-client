@@ -9,6 +9,8 @@ interface MapObject {
 
 export function createMap(element: string, mapObjects: MapObject[]): void {
   ymaps.ready(function () {
+    const containerSize = [400, 400];
+    const initialZoom = 18;
     let minLat: number = 0, minLon: number = 0;
     let maxLat: number = 0, maxLon: number = 0;
 
@@ -19,11 +21,11 @@ export function createMap(element: string, mapObjects: MapObject[]): void {
       maxLon = !maxLon ? mapObject.coordinates[1] : (maxLon < mapObject.coordinates[1] ? mapObject.coordinates[1] : maxLon);
     });
 
-    const centerAndZoom = ymaps.util.bounds.getCenterAndZoom([[minLat, minLon], [maxLat, maxLon]], [400, 400]);
+    const centerAndZoom = ymaps.util.bounds.getCenterAndZoom([[minLat, minLon], [maxLat, maxLon]], containerSize);
 
     if (mapObjects.length === 1) {
       centerAndZoom.center = mapObjects[0].coordinates;
-      centerAndZoom.zoom = 18;
+      centerAndZoom.zoom = initialZoom;
     }
 
     let map = new ymaps.Map(element, {
