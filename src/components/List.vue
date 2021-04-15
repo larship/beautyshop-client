@@ -14,17 +14,15 @@
               v-if="beautyshop.favorite">&#9733;</span>
       </div>
     </div>
-    <div class="beautyshop-map" id="list-map">
-
-    </div>
+    <div class="beautyshop-map" id="list-map" v-show="currentShowState === ShowState.map"></div>
     <footer>
       <div class="mode-switcher">
         <span @click="currentShowState = ShowState.all"
               v-bind:class="{ 'selected': currentShowState === ShowState.all }">Все</span>
-        <span @click="currentShowState = ShowState.map"
-              v-bind:class="{ 'selected': currentShowState === ShowState.map }">Карта</span>
         <span @click="currentShowState = ShowState.favorite"
               v-bind:class="{ 'selected': currentShowState === ShowState.favorite }">Избранные</span>
+        <span @click="currentShowState = ShowState.map"
+              v-bind:class="{ 'selected': currentShowState === ShowState.map }">Карта</span>
       </div>
     </footer>
   </div>

@@ -7,7 +7,7 @@ declare module ymaps {
   export function ready(onFulfilled?: Function): Promise;
 
   export class Map {
-    constructor(element: string, state: MapState, options?: object);
+    constructor(element: string, state: MapState, options?: MapOptions);
 
     geoObjects: GeoObjectCollection;
   }
@@ -17,6 +17,11 @@ declare module ymaps {
     zoom?: number;
     controls?: string[];
     bounds?: number[][];
+  }
+
+  export class MapOptions {
+    minZoom?: number;
+    maxZoom?: number;
   }
 
   export class GeoObjectCollection {

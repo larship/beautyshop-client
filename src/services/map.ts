@@ -32,6 +32,8 @@ export function createMap(element: string, mapObjects: MapObject[]): void {
       center: centerAndZoom.center,
       zoom: centerAndZoom.zoom,
       controls: []
+    }, {
+      minZoom: 10
     });
 
     for (let mapObject of mapObjects) {
