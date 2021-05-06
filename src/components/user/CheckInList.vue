@@ -1,7 +1,7 @@
 <template>
   <div class="user-check-in-list-screen">
     <div class="check-in-list">
-      <div v-for="checkInItem in checkInList" v-bind:key="checkInItem.uuid" class="check-in-item">
+      <div v-for="checkInItem in checkInList" v-bind:key="checkInItem.uuid" v-bind:class="{ 'active': checkInItem.isActive }" class="check-in-item">
         <div>
           {{ checkInItem.beautyshopName }}<br>
           {{ checkInItem.serviceTypeName }} - {{ checkInItem.workerName }}
@@ -34,6 +34,7 @@ interface CheckInViewItem {
   workerName: string;
   startDate: string;
   price: string;
+  isActive: boolean;
 }
 
 export default defineComponent({
@@ -58,7 +59,8 @@ export default defineComponent({
           serviceTypeName: checkInItem.serviceType.name,
           workerName: checkInItem.worker.fullName,
           startDate: dayjs(checkInItem.startDate).format('D MMMM, HH:mm'),
-          price: checkInItem.price as unknown as string
+          price: checkInItem.price as unknown as string,
+          isActive: dayjs(checkInItem.endDate).isAfter(dayjs()),
         };
       });
     });
