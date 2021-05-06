@@ -1,7 +1,8 @@
 <template>
   <div class="user-check-in-list-screen">
     <div class="check-in-list">
-      <div v-for="checkInItem in checkInList" v-bind:key="checkInItem.uuid" v-bind:class="{ 'active': checkInItem.isActive }" class="check-in-item">
+      <div v-for="checkInItem in checkInList" v-bind:key="checkInItem.uuid"
+           v-bind:class="{ 'active': checkInItem.isActive, 'cancelled': checkInItem.isDeleted }" class="check-in-item">
         <div>
           {{ checkInItem.beautyshopName }}<br>
           {{ checkInItem.serviceTypeName }} - {{ checkInItem.workerName }}
@@ -10,6 +11,7 @@
           {{ checkInItem.startDate }}<br>
           {{ checkInItem.price }} рублей
         </div>
+        <button v-if="checkInItem.isActive" @click="cancelCheckIn(checkInItem.uuid)" class="check-in-item--cancel">X</button>
       </div>
     </div>
     <div class="buttons-container buttons-container--single">
@@ -29,11 +31,13 @@ import { MonthNameList } from '@/services/lang';
 import router from '@/router';
 
 interface CheckInViewItem {
+  uuid: string;
   beautyshopName: string;
   serviceTypeName: string;
   workerName: string;
   startDate: string;
   price: string;
+  isDeleted: boolean;
   isActive: boolean;
 }
 
@@ -55,12 +59,14 @@ export default defineComponent({
 
       return list.map((checkInItem: CheckInItem) => {
         return {
+          uuid: checkInItem.uuid,
           beautyshopName: checkInItem.beautyshop.name,
           serviceTypeName: checkInItem.serviceType.name,
           workerName: checkInItem.worker.fullName,
           startDate: dayjs(checkInItem.startDate).format('D MMMM, HH:mm'),
           price: checkInItem.price as unknown as string,
-          isActive: dayjs(checkInItem.endDate).isAfter(dayjs()),
+          isDeleted: checkInItem.deleted,
+          isActive: dayjs(checkInItem.endDate).isAfter(dayjs()) && !checkInItem.deleted,
         };
       });
     });
@@ -69,15 +75,25 @@ export default defineComponent({
       router.back();
     }
 
-    if (client) {
-      store.dispatch(ActionTypes.GetClientCheckInList, {
-        clientUuid: client.uuid
-      });
+    const updateList = () => {
+      if (client) {
+        store.dispatch(ActionTypes.GetClientCheckInList, {
+          clientUuid: client.uuid
+        });
+      }
+    }
+
+    updateList();
+
+    const cancelCheckIn = (checkInUuid: string) => {
+      store.dispatch(ActionTypes.CancelCheckIn, {checkInUuid});
+      updateList();
     }
 
     return {
       checkInList,
-      goBack
+      goBack,
+      cancelCheckIn
     }
   }
 })
