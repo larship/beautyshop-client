@@ -16,6 +16,8 @@ export type Getters = {
 }
 
 export const getters: GetterTree<State, State> & Getters = {
+  // @deprecated
+  // Используется только на панели, там надо переделать на получение списка и отказаться от использования данного метода
   getCheckInItem: (state: State) => () => {
     if (state.checkInItem?.startDate && dayjs(state.checkInItem.startDate).isBefore(dayjs())) {
       return null;

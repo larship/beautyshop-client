@@ -109,6 +109,23 @@ export default defineComponent({
       return items;
     });
 
+    const excludeTimeItems = computed<string[]>(() => {
+      let excludeItems: string[] = [];
+      const selectedDate = dayjs(checkInDate).format('DD-MM-YYYY');
+
+      store.getters.getCheckInList()?.forEach(item => {
+        const checkInDate = dayjs(item.startDate).format('DD-MM-YYYY');
+
+        if (item.worker.uuid === selectedWorker.value?.uuid && selectedDate === checkInDate) {
+          excludeItems.push(dayjs(item.startDate).format('HH:mm'));
+        }
+      });
+
+      console.log('excludeItems:', excludeItems);
+
+      return excludeItems;
+    });
+
     const serviceTypeUuid = computed<string | null>(() => {
       let uuid: string | null = null;
       selectedWorker.value?.services.forEach(serviceType => {
@@ -151,8 +168,6 @@ export default defineComponent({
             })
           });
 
-          console.log(min, max);
-
           price = (min === max) ? '' + min : min + ' - ' + max;
         }
       }
@@ -175,6 +190,9 @@ export default defineComponent({
     }
 
     const onTimeChange = (currentTime: Date) => {
+
+      console.log('123:', excludeTimeItems.value);
+
       checkInDate.setHours(currentTime.getHours(), currentTime.getMinutes(), 0, 0);
       isTimeSelected.value = true;
     }
