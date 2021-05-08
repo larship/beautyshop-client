@@ -31,6 +31,7 @@
           v-bind:selected-date-item="checkInDatePlain"
           v-bind:open-hour="currentBeautyshop?.openHour"
           v-bind:close-hour="currentBeautyshop?.closeHour"
+          v-bind:exclude-time-items="excludeTimeItems"
           @timeChange="onTimeChange"
           v-if="currentBeautyshop"
       >
@@ -244,6 +245,7 @@ export default defineComponent({
       checkIn,
       goToInfo,
       checkInDatePlain,
+      excludeTimeItems,
     }
   }
 })
