@@ -61,6 +61,7 @@ import CheckInPanel from '@/components/CheckInPanel.vue';
 import { ActionTypes } from '@/store/actions';
 import { useStore } from '@/store';
 import dayjs from 'dayjs';
+import Utc from 'dayjs/plugin/utc';
 import Client from '@/models/Client';
 import Worker from '@/models/Worker';
 
@@ -75,6 +76,15 @@ export default defineComponent({
     const isTimeSelected = ref<boolean>(false);
     const selectedServiceName = ref('');
     const selectedWorker = ref<Worker | null>(null);
+
+    dayjs.extend(Utc);
+
+    store.dispatch(ActionTypes.GetBeautyshopCheckInList, {
+      beautyshopUuid: props.uuid,
+      dateFrom: dayjs().startOf('day').utc().format('YYYY-MM-DD HH:mm:ss'),
+      dateTo: dayjs().endOf('day').utc().format('YYYY-MM-DD HH:mm:ss'),
+    });
+    console.log('CheckInList:', store.getters.getCheckInList());
 
     const servicesList = computed(() => {
       let items: string[] = [];

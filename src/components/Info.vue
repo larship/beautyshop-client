@@ -19,10 +19,7 @@ import { ref, defineComponent } from 'vue';
 import Beautyshop from '@/models/Beautyshop';
 import router from '@/router';
 import CheckInPanel from '@/components/CheckInPanel.vue';
-import { ActionTypes } from '@/store/actions';
 import { useStore } from '@/store';
-import dayjs from 'dayjs';
-import Utc from 'dayjs/plugin/utc';
 import { createMap } from '@/services/map';
 
 export default defineComponent({
@@ -39,14 +36,6 @@ export default defineComponent({
       }]);
     }
 
-    dayjs.extend(Utc);
-
-    store.dispatch(ActionTypes.GetBeautyshopCheckInList, {
-      beautyshopUuid: props.uuid,
-      dateFrom: dayjs().startOf('day').utc().format('YYYY-MM-DD HH:mm:ss'),
-      dateTo: dayjs().endOf('day').utc().format('YYYY-MM-DD HH:mm:ss'),
-    });
-
     const goToList = () => {
       router.push({name: 'List'});
     }
@@ -56,7 +45,6 @@ export default defineComponent({
     }
 
     console.log('currentBeautyshop:', currentBeautyshop);
-    console.log('CheckInList:', store.getters.getCheckInList());
 
     return {
       currentBeautyshop,
