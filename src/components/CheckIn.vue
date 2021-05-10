@@ -79,12 +79,16 @@ export default defineComponent({
 
     dayjs.extend(Utc);
 
-    store.dispatch(ActionTypes.GetBeautyshopCheckInList, {
-      beautyshopUuid: props.uuid,
-      dateFrom: dayjs().startOf('day').utc().format('YYYY-MM-DD HH:mm:ss'),
-      dateTo: dayjs().endOf('day').utc().format('YYYY-MM-DD HH:mm:ss'),
-    });
-    console.log('CheckInList:', store.getters.getCheckInList());
+    const updateBeautyshopCheckInList = () => {
+      store.dispatch(ActionTypes.GetBeautyshopCheckInList, {
+        beautyshopUuid: props.uuid,
+        dateFrom: dayjs().startOf('day').utc().format('YYYY-MM-DD HH:mm:ss'),
+        dateTo: dayjs().endOf('day').utc().format('YYYY-MM-DD HH:mm:ss'),
+      });
+      console.log('CheckInList:', store.getters.getCheckInList());
+    }
+
+    updateBeautyshopCheckInList();
 
     const servicesList = computed(() => {
       let items: string[] = [];
@@ -239,6 +243,8 @@ export default defineComponent({
       selectedServiceName.value = '';
       selectedWorker.value = null;
       isTimeSelected.value = false;
+
+      updateBeautyshopCheckInList();
     }
 
     return {
