@@ -131,7 +131,7 @@ export default defineComponent({
       store.getters.getCheckInList()?.forEach(item => {
         const checkInDate = dayjs(item.startDate).format('DD-MM-YYYY');
 
-        if (item.worker.uuid === selectedWorker.value?.uuid && selectedDate === checkInDate) {
+        if (item.worker.uuid === selectedWorker.value?.uuid && selectedDate === checkInDate && !item.deleted) {
           excludeItems.push(dayjs(item.startDate).format('HH:mm'));
         }
       });
@@ -205,9 +205,6 @@ export default defineComponent({
     }
 
     const onTimeChange = (currentTime: Date) => {
-
-      console.log('123:', excludeTimeItems.value);
-
       checkInDate.setHours(currentTime.getHours(), currentTime.getMinutes(), 0, 0);
       isTimeSelected.value = true;
     }
