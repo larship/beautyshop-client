@@ -131,6 +131,7 @@ export default defineComponent({
       store.getters.getCheckInList()?.forEach(item => {
         const checkInDate = dayjs(item.startDate).format('DD-MM-YYYY');
 
+        // TODO Тут также надо учитывать продолжительность процедуры
         if (item.worker.uuid === selectedWorker.value?.uuid && selectedDate === checkInDate && !item.deleted) {
           excludeItems.push(dayjs(item.startDate).format('HH:mm'));
         }
