@@ -1,7 +1,8 @@
 <template>
   <div class="time-chooser">
     <span @click="chooseTime(viewItem)" v-for="viewItem in viewItems" v-bind:key="viewItem.value"
-          v-bind:class="{ 'selected': selectedTimeItem === viewItem.value, 'disabled': viewItem.isDisabled }" class="time-chooser--item">{{ viewItem.value }}</span>
+          v-bind:class="{ 'selected': viewItem.isSelected, 'disabled': viewItem.isDisabled }"
+          class="time-chooser--item">{{ viewItem.value }}</span>
   </div>
 </template>
 
@@ -12,6 +13,7 @@ import CustomParseFormat from 'dayjs/plugin/customParseFormat';
 
 interface ViewItem {
   value: string;
+  isSelected: boolean;
   isDisabled: boolean;
 }
 
@@ -21,9 +23,7 @@ export default defineComponent({
   setup(props, {emit}) {
     let openHour = toRef(props, 'openHour');
     let closeHour = toRef(props, 'closeHour');
-    let intervalsCount = (closeHour.value - openHour.value) * 2;
     let timeItems = ref<string[]>([]);
-    // let timeItemsView = ref<ViewItem[]>([]);
     let selectedTimeItem = ref('');
     let isTimeSelected = toRef(props, 'isTimeSelected');
     let selectedDateItem = toRef(props, 'selectedDateItem');
@@ -38,7 +38,6 @@ export default defineComponent({
 
       if (selectedTimeItem.value != viewItem.value && !viewItem.isDisabled) {
         selectedTimeItem.value = viewItem.value;
-        // @TODO Устанавливать признак selected для ViewItem
         emit('timeChange', userDate);
       }
     }
@@ -61,7 +60,7 @@ export default defineComponent({
           'DD-MM-YYYY HH:mm', true);
       let timeIterator = dayjs(openHour.value + ':00', 'HH:mm');
 
-      for (let i = 0; i < intervalsCount; i++) {
+      for (let i = 0; i < (closeHour.value - openHour.value) * 2; i++) {
         if (timeIterator.isAfter(selectedDate) || currentDate.format('DD-MM-YYYY') != selectedDate.format('DD-MM-YYYY')) {
           items.push(timeIterator.format('HH:mm'));
         }
@@ -93,6 +92,7 @@ export default defineComponent({
           timeItems.value.forEach(item => {
             viewItems.push({
               value: item,
+              isSelected: selectedTimeItem.value === item,
               isDisabled: excludeTimeItems.value.indexOf(item) !== -1,
             })
           });
@@ -103,10 +103,8 @@ export default defineComponent({
     updateTimeItems();
 
     return {
-      timeItems,
-      selectedTimeItem,
-      chooseTime,
       viewItems,
+      chooseTime,
     }
   }
 })
