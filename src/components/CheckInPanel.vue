@@ -15,16 +15,12 @@ import { defineComponent, computed } from 'vue';
 import { useStore } from '@/store';
 import CheckInItem from '@/models/CheckInItem';
 import dayjs from 'dayjs';
-import UpdateLocale from 'dayjs/plugin/updateLocale';
+import LocaleRu from 'dayjs/locale/ru';
 import { ActionTypes } from '@/store/actions';
-import { MonthNameList } from '@/services/lang';
 
 export default defineComponent({
   setup() {
-    dayjs.extend(UpdateLocale);
-    dayjs.updateLocale('en', {
-      months: MonthNameList
-    });
+    dayjs.locale(LocaleRu);
 
     const store = useStore();
     const checkInItem = computed<CheckInItem | null>(() => {

@@ -9,29 +9,25 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import dayjs from 'dayjs';
-import UpdateLocale from 'dayjs/plugin/updateLocale';
 import IsSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import { MonthNameList } from '@/services/lang';
+import LocaleRu from 'dayjs/locale/ru';
 
 export default defineComponent({
   emits: ['dateChange'],
   setup(props, {emit}) {
-    dayjs.extend(UpdateLocale);
+    dayjs.locale(LocaleRu);
     dayjs.extend(IsSameOrAfter);
-    dayjs.updateLocale('en', {
-      months: MonthNameList
-    });
 
     let selectedDate = dayjs();
     let currentDate = dayjs();
-    let selectedDateStr = ref(selectedDate.format('DD MMMM'));
+    let selectedDateStr = ref(selectedDate.format('dddd, DD MMMM'));
 
     const changeDay = (direction: number) => {
       let nextDate = selectedDate.add(direction, 'day');
 
       if (nextDate.isSameOrAfter(currentDate)) {
         selectedDate = selectedDate.add(direction, 'day');
-        selectedDateStr.value = selectedDate.format('DD MMMM');
+        selectedDateStr.value = selectedDate.format('dddd, DD MMMM');
 
         emit('dateChange', selectedDate.toDate());
       }

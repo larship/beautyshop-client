@@ -26,8 +26,7 @@ import { useStore } from '@/store';
 import { ActionTypes } from '@/store/actions';
 import CheckInItem from '@/models/CheckInItem';
 import dayjs from 'dayjs';
-import UpdateLocale from 'dayjs/plugin/updateLocale';
-import { MonthNameList } from '@/services/lang';
+import LocaleRu from 'dayjs/locale/ru';
 import router from '@/router';
 
 interface CheckInViewItem {
@@ -43,10 +42,7 @@ interface CheckInViewItem {
 
 export default defineComponent({
   setup() {
-    dayjs.extend(UpdateLocale);
-    dayjs.updateLocale('en', {
-      months: MonthNameList
-    });
+    dayjs.locale(LocaleRu);
 
     const store = useStore();
     const client = store.getters.getClient();
