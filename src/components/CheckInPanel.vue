@@ -2,7 +2,7 @@
   <div v-if="checkInItem" class="check-in-panel">
     <div class="check-in-panel__info">
       Вы записаны в салон {{ checkInItem.beautyshop.name }} на {{ checkInDate }}
-      {{ checkInItem.serviceType.name }}, {{ checkInItem.price }} рублей (TODO удалить эту панель)
+      {{ checkInItem.serviceType.name }}, {{ checkInItem.price }} рублей (TODO удалить эту панель, заменить на попап)
     </div>
     <div class="check-in-panel__cancel">
       <button @click="cancelCheckIn()">Отмена</button>

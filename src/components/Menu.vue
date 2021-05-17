@@ -4,7 +4,7 @@
     <div class="menu-item city" @click="isLocationChangeFormShow = true">{{ currentLocation }}</div>
     <div class="menu-item" @click="goToUserCheckInList()">Мои записи</div>
   </div>
-  <LocationChangeForm v-bind:is-open="isLocationChangeFormShow" @closed="isLocationChangeFormShow = false"></LocationChangeForm>
+  <LocationChangeForm v-bind:is-open="isLocationChangeFormShow" @closed="isLocationChangeFormShow = false; closeMenu();"></LocationChangeForm>
 </template>
 
 <script lang="ts">
