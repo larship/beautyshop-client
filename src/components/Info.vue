@@ -7,8 +7,8 @@
       Часы работы: {{ currentBeautyshop.openHour }}:00 - {{ currentBeautyshop.closeHour }}:00
     </div>
     <div class="info-map" id="info-map" v-if="currentBeautyshop?.coordinates"></div>
-    <div class="buttons-container">
-      <button @click="goToCheckIn()">Выбрать мастера</button>
+    <div class="buttons-container" v-bind:class="{ 'buttons-container--single': !currentBeautyshop?.workers }">
+      <button v-if="currentBeautyshop?.workers" @click="goToCheckIn()">Выбрать мастера</button>
       <button @click="goToList()">Назад</button>
     </div>
   </div>
