@@ -1,5 +1,4 @@
 <template>
-  <CheckInPanel></CheckInPanel>
   <div class="list-screen">
     <div class="loading" v-if="isLoading">Загрузка...</div>
     <div class="beautyshop-list">
@@ -30,7 +29,6 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
-import CheckInPanel from '@/components/CheckInPanel.vue';
 import Beautyshop from '@/models/Beautyshop';
 import router from '@/router';
 import { useStore } from '@/store';
@@ -44,7 +42,6 @@ enum ShowState {
 }
 
 export default defineComponent({
-  components: {CheckInPanel},
   setup() {
     const currentShowState = ref<ShowState>(ShowState.all);
     const store = useStore();

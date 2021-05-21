@@ -1,5 +1,4 @@
 <template>
-  <CheckInPanel></CheckInPanel>
   <div class="info-screen">
     <div class="info-common" v-if="currentBeautyshop">
       {{ currentBeautyshop.name }}<br>
@@ -18,12 +17,10 @@
 import { ref, defineComponent } from 'vue';
 import Beautyshop from '@/models/Beautyshop';
 import router from '@/router';
-import CheckInPanel from '@/components/CheckInPanel.vue';
 import { useStore } from '@/store';
 import { createMap } from '@/services/map';
 
 export default defineComponent({
-  components: {CheckInPanel},
   props: ['uuid'],
   setup(props) {
     const store = useStore();

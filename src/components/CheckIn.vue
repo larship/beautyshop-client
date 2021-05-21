@@ -1,5 +1,5 @@
 <template>
-  <CheckInPanel></CheckInPanel>
+  <popup v-if="showCheckInPopup" @close="showCheckInPopup = false" title="Вы успешно записаны в салон!"></popup>
   <div class="check-in-screen">
     <div @click="checkInOther()">
       Записать другого человека (перейти на эту же страницу) &gt;
@@ -57,25 +57,26 @@ import Beautyshop from '@/models/Beautyshop';
 import router from '@/router';
 import DateChooser from '@/components/DateChooser.vue';
 import TimeChooser from '@/components/TimeChooser.vue';
-import CheckInPanel from '@/components/CheckInPanel.vue';
 import { ActionTypes } from '@/store/actions';
 import { useStore } from '@/store';
 import dayjs from 'dayjs';
 import Utc from 'dayjs/plugin/utc';
 import Client from '@/models/Client';
 import Worker from '@/models/Worker';
+import Popup from '@/components/Popup.vue';
 
 export default defineComponent({
-  components: {TimeChooser, DateChooser, CheckInPanel},
+  components: {Popup, TimeChooser, DateChooser},
   props: ['uuid'],
   setup(props) {
     const store = useStore();
     const currentBeautyshop = ref<Beautyshop | null>(store.getters.getBeautyshop(props.uuid));
     const checkInDate = new Date();
     const checkInDatePlain = ref<string>(dayjs(checkInDate).format('DD-MM-YYYY'));
-    const isTimeSelected = ref<boolean>(false);
+    const isTimeSelected = ref(false);
     const selectedServiceName = ref('');
     const selectedWorker = ref<Worker | null>(null);
+    const showCheckInPopup = ref(false);
 
     dayjs.extend(Utc);
 
@@ -243,6 +244,8 @@ export default defineComponent({
       isTimeSelected.value = false;
 
       updateBeautyshopCheckInList();
+
+      showCheckInPopup.value = true;
     }
 
     return {
@@ -260,6 +263,7 @@ export default defineComponent({
       goToInfo,
       checkInDatePlain,
       excludeTimeItems,
+      showCheckInPopup,
     }
   }
 })
