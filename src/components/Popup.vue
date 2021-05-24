@@ -1,11 +1,17 @@
 <template>
   <div class="popup-mask"></div>
   <div class="popup">
-    <div class="popup__content">
+    <div class="popup--content">
       {{ title }}
     </div>
-    <div class="popup__buttons">
-      <button @click="close()">Хорошо</button>
+    <div class="popup--buttons" v-bind:class="{ 'popup--buttons__two-options': twoButtons }">
+      <template v-if="twoButtons">
+        <button @click="submit()">Да</button>
+        <button @click="close()">Закрыть</button>
+      </template>
+      <template v-else>
+        <button @click="close()">Хорошо</button>
+      </template>
     </div>
   </div>
 </template>
@@ -14,15 +20,20 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  emits: ['close'],
-  props: ['title'],
+  emits: ['closePopup', 'submitPopup'],
+  props: ['title', 'twoButtons'],
   setup(props, {emit}) {
     const close = () => {
-      emit('close');
+      emit('closePopup');
+    }
+
+    const submit = () => {
+      emit('submitPopup');
     }
 
     return {
       close,
+      submit,
     }
   }
 })

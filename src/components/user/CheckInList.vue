@@ -1,4 +1,6 @@
 <template>
+  <popup v-if="showCancelPopup" @submit-popup="showCancelPopup = false; cancelCheckIn(checkInUuidToCancel, true)"
+         @close-popup="showCancelPopup = false" title="Вы уверены, что хотите отменить запись?" two-buttons="true"></popup>
   <div class="user-check-in-list-screen">
     <div class="check-in-list">
       <div v-for="checkInItem in checkInList" v-bind:key="checkInItem.uuid"
@@ -11,7 +13,9 @@
           {{ checkInItem.startDate }}<br>
           {{ checkInItem.price }} рублей
         </div>
-        <button v-if="checkInItem.isActive" @click="cancelCheckIn(checkInItem.uuid)" class="check-in-item--cancel">X</button>
+        <button v-if="checkInItem.isActive" @click="cancelCheckIn(checkInItem.uuid, false)"
+                class="check-in-item--cancel">X
+        </button>
       </div>
     </div>
     <div class="buttons-container buttons-container--single">
@@ -21,13 +25,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { useStore } from '@/store';
 import { ActionTypes } from '@/store/actions';
 import CheckInItem from '@/models/CheckInItem';
 import dayjs from 'dayjs';
 import LocaleRu from 'dayjs/locale/ru';
 import router from '@/router';
+import Popup from '@/components/Popup.vue';
 
 interface CheckInViewItem {
   uuid: string;
@@ -41,6 +46,7 @@ interface CheckInViewItem {
 }
 
 export default defineComponent({
+  components: {Popup},
   setup() {
     dayjs.locale(LocaleRu);
 
@@ -67,6 +73,9 @@ export default defineComponent({
       });
     });
 
+    const showCancelPopup = ref(false);
+    const checkInUuidToCancel = ref('');
+
     const goBack = () => {
       router.back();
     }
@@ -81,15 +90,22 @@ export default defineComponent({
 
     updateList();
 
-    const cancelCheckIn = (checkInUuid: string) => {
-      store.dispatch(ActionTypes.CancelCheckIn, {checkInUuid});
-      updateList();
+    const cancelCheckIn = (checkInUuid: string, force: boolean) => {
+      if (!force) {
+        checkInUuidToCancel.value = checkInUuid;
+        showCancelPopup.value = true;
+      } else {
+        store.dispatch(ActionTypes.CancelCheckIn, {checkInUuid});
+        updateList();
+      }
     }
 
     return {
       checkInList,
       goBack,
-      cancelCheckIn
+      cancelCheckIn,
+      checkInUuidToCancel,
+      showCancelPopup,
     }
   }
 })

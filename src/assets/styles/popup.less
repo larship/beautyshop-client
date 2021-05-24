@@ -11,12 +11,18 @@
   transition: all 0.3s ease;
   box-sizing: border-box;
 
-  &__content {
-
+  &--content {
+    text-align: center;
   }
 
-  &__buttons {
+  &--buttons {
     padding-top: 15px;
+
+    &__two-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-column-gap: 25px;
+    }
 
     button {
       width: 100%;

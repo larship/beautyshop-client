@@ -1,5 +1,5 @@
 <template>
-  <popup v-if="showCheckInPopup" @close="showCheckInPopup = false" title="Вы успешно записаны в салон!"></popup>
+  <popup v-if="showCheckInPopup" @close-popup="showCheckInPopup = false" title="Вы успешно записаны в салон!"></popup>
   <div class="check-in-screen">
     <div @click="checkInOther()">
       Записать другого человека (перейти на эту же страницу) &gt;
