@@ -18,7 +18,7 @@
         </button>
       </div>
     </div>
-    <div class="buttons-container buttons-container--single">
+    <div class="buttons-container buttons-container__single">
       <button @click="goBack()">Назад</button>
     </div>
   </div>
