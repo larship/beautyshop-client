@@ -1,9 +1,15 @@
 .check-in-screen {
   text-align: left;
   margin: @pageMargin;
+  display: grid;
+  grid-template-rows: 55px 1fr 60px;
+  grid-row-gap: 15px;
+  height: calc(100vh - @headerHeight - 20px);
 
-  > div {
-    padding-bottom: 10px;
+  .check-in-data {
+    > div {
+      padding-bottom: 10px;
+    }
   }
 
   select {
@@ -24,5 +30,9 @@
     &--currency {
       font-size: 12pt;
     }
+  }
+
+  .buttons-container {
+    margin-top: 0px;
   }
 }

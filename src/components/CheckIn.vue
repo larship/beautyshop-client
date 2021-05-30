@@ -4,43 +4,45 @@
     <div @click="checkInOther()">
       Записать другого человека (перейти на эту же страницу) &gt;
     </div>
-    <div class="data-choose-row">
-      <span class="data-choose-row--title">Услуга:</span>
-      <select v-model="selectedServiceName">
-        <option v-for="serviceName in servicesList" v-bind:value="serviceName" v-bind:key="serviceName">
-          {{ serviceName }}
-        </option>
-      </select>
-    </div>
-    <div class="data-choose-row">
-      <span class="data-choose-row--title">Мастер:</span>
-      <select v-model="selectedWorker">
-        <option v-for="worker in workersList" v-bind:value="worker" v-bind:key="worker.uuid">
-          {{ worker.fullName }}
-        </option>
-      </select>
-    </div>
-    <div class="data-choose-row">
-      <span class="data-choose-row--title">Дата:</span>
-      <DateChooser @dateChange="onDateChange"></DateChooser>
-    </div>
-    <div class="data-choose-row">
-      <span class="data-choose-row--title">Время:</span>
-      <TimeChooser
-          v-bind:is-time-selected="isTimeSelected"
-          v-bind:selected-date-item="checkInDatePlain"
-          v-bind:open-hour="currentBeautyshop?.openHour"
-          v-bind:close-hour="currentBeautyshop?.closeHour"
-          v-bind:exclude-time-items="excludeTimeItems"
-          @timeChange="onTimeChange"
-          v-if="currentBeautyshop"
-      >
-      </TimeChooser>
-    </div>
-    <div class="data-choose-row">
-      <span class="data-choose-row--title">Стоимость:</span>
-      <div>
-        <span class="price">{{ price }} <span class="price--currency">рублей</span></span>
+    <div class="check-in-data">
+      <div class="data-choose-row">
+        <span class="data-choose-row--title">Услуга:</span>
+        <select v-model="selectedServiceName">
+          <option v-for="serviceName in servicesList" v-bind:value="serviceName" v-bind:key="serviceName">
+            {{ serviceName }}
+          </option>
+        </select>
+      </div>
+      <div class="data-choose-row">
+        <span class="data-choose-row--title">Мастер:</span>
+        <select v-model="selectedWorker">
+          <option v-for="worker in workersList" v-bind:value="worker" v-bind:key="worker.uuid">
+            {{ worker.fullName }}
+          </option>
+        </select>
+      </div>
+      <div class="data-choose-row">
+        <span class="data-choose-row--title">Дата:</span>
+        <DateChooser @dateChange="onDateChange"></DateChooser>
+      </div>
+      <div class="data-choose-row">
+        <span class="data-choose-row--title">Время:</span>
+        <TimeChooser
+            v-bind:is-time-selected="isTimeSelected"
+            v-bind:selected-date-item="checkInDatePlain"
+            v-bind:open-hour="currentBeautyshop?.openHour"
+            v-bind:close-hour="currentBeautyshop?.closeHour"
+            v-bind:exclude-time-items="excludeTimeItems"
+            @timeChange="onTimeChange"
+            v-if="currentBeautyshop"
+        >
+        </TimeChooser>
+      </div>
+      <div class="data-choose-row">
+        <span class="data-choose-row--title">Стоимость:</span>
+        <div>
+          <span class="price">{{ price }} <span class="price--currency">рублей</span></span>
+        </div>
       </div>
     </div>
     <div class="buttons-container">
