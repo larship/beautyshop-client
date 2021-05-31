@@ -1,5 +1,9 @@
 .list-screen {
-  //min-height: calc(100vh - 65px); // Учитывать ещё панель текущей записи
+  text-align: left;
+  display: grid;
+  grid-template-rows: 1fr 40px;
+  grid-row-gap: 15px;
+  height: calc(100vh - @headerHeight);
 
   footer {
     position: fixed;
@@ -33,6 +37,8 @@
   }
 
   .beautyshop-list {
+    overflow-y: scroll;
+
     .beautyshop {
       display: grid;
       grid-template-columns: 1fr 50px;
@@ -63,7 +69,6 @@
 
   .beautyshop-map {
     width: 100vw;
-    height: calc(100vh - 105px);
-    margin-top: 10px;
+    height: 100%;
   }
 }

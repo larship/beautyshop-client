@@ -1,7 +1,7 @@
 <template>
   <div class="list-screen">
     <div class="loading" v-if="isLoading">Загрузка...</div>
-    <div class="beautyshop-list">
+    <div class="beautyshop-list" v-show="currentShowState !== ShowState.map">
       <div v-for="beautyshop in beautyshopsList" v-bind:key="beautyshop.uuid" class="beautyshop">
         <div @click="openBeautyshop(beautyshop)">
           <div class="beautyshop--name">{{ beautyshop.name }}</div>
