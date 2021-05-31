@@ -1,5 +1,10 @@
 .user-check-in-list-screen {
   text-align: left;
+  margin: @pageMargin;
+  display: grid;
+  grid-template-rows: 1fr 50px;
+  grid-row-gap: 15px;
+  height: calc(100vh - @headerHeight - 20px);
 
   .check-in-list {
     max-height: calc(100vh - 148px);
@@ -37,6 +42,6 @@
   }
 
   .buttons-container {
-    margin: @pageMargin;
+    margin-top: 0px;
   }
 }
