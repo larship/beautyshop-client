@@ -18,7 +18,7 @@ function getRequestHeaders(): Record<string, string> {
   return retData;
 }
 
-export function sendData<T>(url: string, data: object): Promise<T | null> {
+export function sendData<T>(url: string, data: Record<string, unknown>): Promise<T | null> {
   return fetch(Config.BACKEND_URL + url, {
     method: 'POST',
     headers: getRequestHeaders(),
