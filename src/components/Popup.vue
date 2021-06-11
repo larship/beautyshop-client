@@ -21,7 +21,10 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   emits: ['closePopup', 'submitPopup'],
-  props: ['title', 'twoButtons'],
+  props: {
+    'title': String,
+    'twoButtons': Boolean
+  },
   setup(props, {emit}) {
     const close = () => {
       emit('closePopup');

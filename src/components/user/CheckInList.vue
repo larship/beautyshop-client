@@ -1,6 +1,6 @@
 <template>
   <popup v-if="showCancelPopup" @submit-popup="showCancelPopup = false; cancelCheckIn(checkInUuidToCancel, true)"
-         @close-popup="showCancelPopup = false" title="Вы уверены, что хотите отменить запись?" two-buttons="true"></popup>
+         @close-popup="showCancelPopup = false" title="Вы уверены, что хотите отменить запись?" :two-buttons="true"></popup>
   <div class="user-check-in-list-screen">
     <div class="check-in-list">
       <div v-for="checkInItem in checkInList" v-bind:key="checkInItem.uuid"
