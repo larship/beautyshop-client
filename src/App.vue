@@ -38,6 +38,10 @@ export default defineComponent({
           return beautyshop?.name ?? 'Информация о салоне';
         }
 
+        case 'Settings': {
+          return 'Настройки';
+        }
+
         case 'UserCheckInList':
           return 'Мои записи';
       }
@@ -45,13 +49,23 @@ export default defineComponent({
       return '';
     };
 
+    const goBack = () => {
+      router.back();
+    }
+
+    const goToSettings = () => {
+      router.push({name: 'Settings'});
+    }
+
     const routeTitle = ref(getRouteTitle(currentRoute.value));
 
     watch(
         currentRoute,
         (value) => {
           routeTitle.value = getRouteTitle(value);
-          needShowHeader.value = value.name != 'Hello';
+          needShowHeader.value = value.name !== 'Hello';
+          needShowBackButton.value = value.name !== 'Hello' && value.name !== 'List';
+          needShowSettingsButton.value = value.name !== 'Settings';
         }
     );
 
@@ -64,9 +78,13 @@ export default defineComponent({
 
     return {
       needShowHeader,
+      needShowBackButton,
+      needShowSettingsButton,
       isMenuOpen,
       location,
       routeTitle,
+      goBack,
+      goToSettings,
     }
   }
 })
