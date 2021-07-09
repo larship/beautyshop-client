@@ -1,6 +1,14 @@
 <template>
   <div class="list-screen">
     <div class="loading" v-if="isLoading">Загрузка...</div>
+    <div class="mode-switcher">
+      <span @click="currentShowState = ShowState.all"
+            v-bind:class="{ 'selected': currentShowState === ShowState.all }">Все</span>
+      <span @click="currentShowState = ShowState.favorite"
+            v-bind:class="{ 'selected': currentShowState === ShowState.favorite }">Избранное</span>
+      <span @click="currentShowState = ShowState.map"
+            v-bind:class="{ 'selected': currentShowState === ShowState.map }">Карта</span>
+    </div>
     <div class="beautyshop-list" v-show="currentShowState !== ShowState.map">
       <div v-for="beautyshop in beautyshopsList" v-bind:key="beautyshop.uuid" class="beautyshop">
         <div @click="openBeautyshop(beautyshop)">
@@ -14,16 +22,12 @@
       </div>
     </div>
     <div class="beautyshop-map" id="list-map" v-show="currentShowState === ShowState.map"></div>
-    <footer>
-      <div class="mode-switcher">
-        <span @click="currentShowState = ShowState.all"
-              v-bind:class="{ 'selected': currentShowState === ShowState.all }">Все</span>
-        <span @click="currentShowState = ShowState.favorite"
-              v-bind:class="{ 'selected': currentShowState === ShowState.favorite }">Избранные</span>
-        <span @click="currentShowState = ShowState.map"
-              v-bind:class="{ 'selected': currentShowState === ShowState.map }">Карта</span>
+    <div class="footer-nav">
+      <div class="menu-element menu-element__my-list" @click="goToUserCheckInList()">
+        <span class="menu-element--icon"></span>
+        <span class="menu-element--title">Мои записи</span>
       </div>
-    </footer>
+    </div>
   </div>
 </template>
 
@@ -82,6 +86,10 @@ export default defineComponent({
       }
     }
 
+    const goToUserCheckInList = () => {
+      router.push({name: 'UserCheckInList'});
+    }
+
     store.dispatch(ActionTypes.GetBeautyshopList, {
       location: store.getters.getLocation()
     });
@@ -93,6 +101,7 @@ export default defineComponent({
       setFavorite,
       ShowState,
       currentShowState,
+      goToUserCheckInList,
     }
   }
 })

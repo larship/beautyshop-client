@@ -46,10 +46,9 @@
         </div>
       </div>
     </div>
-    <div class="buttons-container">
+    <div class="buttons-container buttons-container__single">
       <button @click="checkIn()" v-bind:disabled="!selectedWorker || !selectedServiceName || !isTimeSelected">Записаться
       </button>
-      <button @click="goToInfo()">Назад</button>
     </div>
   </div>
 </template>

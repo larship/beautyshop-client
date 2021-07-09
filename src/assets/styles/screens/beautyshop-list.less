@@ -1,33 +1,54 @@
 .list-screen {
   text-align: left;
   display: grid;
-  grid-template-rows: 1fr 40px;
-  grid-row-gap: 15px;
+  grid-template-rows: auto 1fr auto;
+  //grid-row-gap: 15px;
   height: calc(100vh - @headerHeight);
 
-  footer {
-    position: fixed;
-    width: 100%;
-    bottom: 0px;
+  .mode-switcher {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    position: static;
+    text-align: center;
 
-    .mode-switcher {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      position: static;
+    span {
+      border-bottom: 1px solid #dddddd;
+      padding: 10px 0px;
+    }
+
+    span + span {
+      border-left: 1px solid #bbbbbb;
+    }
+
+    .selected {
+      border-bottom: 3px solid cornflowerblue;
+      padding-bottom: 8px;
+    }
+  }
+
+  .footer-nav {
+    display: grid;
+    background-color: #f8f8f8;
+
+    .menu-element {
       text-align: center;
+      font-size: 8pt;
 
-      span {
-        border-top: 1px solid #dddddd;
-        padding: 10px 0px;
+      &__my-list {
+        width: 65px;
+
+        .menu-element--icon {
+          background-image: url("~@/assets/images/my-check-in-list.svg");
+        }
       }
 
-      span + span {
-        border-left: 1px solid #bbbbbb;
-      }
-
-      .selected {
-        border-top: 3px solid cornflowerblue;
-        padding-top: 8px;
+      &--icon {
+        width: 30px;
+        height: 30px;
+        margin: 10px;
+        margin-bottom: 3px;
+        display: inline-block;
+        background-repeat: no-repeat;
       }
     }
   }
@@ -44,10 +65,8 @@
       grid-template-columns: 1fr 50px;
       justify-content: space-between;
       align-items: center;
-      padding: 10px;
-      padding-top: 15px;
-      padding-bottom: 15px;
-      border-top: 1px solid #c8c8c8;
+      padding: 15px 10px 15px 10px;
+      //border-top: 1px solid #c8c8c8;
       border-bottom: 1px solid #c8c8c8;
       //border-radius: 5px;
       background-color: #ffffff;

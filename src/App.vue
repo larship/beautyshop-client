@@ -15,22 +15,25 @@
 import { computed, defineComponent, ref, watch } from 'vue';
 import { useStore } from '@/store';
 import router from '@/router';
-import Menu from '@/components/Menu.vue';
+// import Menu from '@/components/Menu.vue';
 import { RouteLocationNormalizedLoaded } from 'vue-router';
 
 export default defineComponent({
-  components: {Menu},
+  // components: {Menu},
+  components: {},
   setup() {
     const isMenuOpen = ref(false);
     const store = useStore();
     const location = computed(() => store.getters.getLocation());
     const currentRoute = computed(() => router.currentRoute.value);
     const needShowHeader = ref(false);
+    const needShowBackButton = ref(false);
+    const needShowSettingsButton = ref(false);
 
     const getRouteTitle = (route: RouteLocationNormalizedLoaded) => {
       switch (route.name) {
         case 'List':
-          return 'Каталог - ' + store.getters.getLocation();
+          return store.getters.getLocation();
 
         case 'Info':
         case 'CheckIn': {
