@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
-    <Menu v-bind:is-open="isMenuOpen" @closed="isMenuOpen = false"></Menu>
-    <header v-if="needShowHeader">
-      <div class="header--title">
-        <span>{{ routeTitle }}</span>
-        <button class="menu-button" @click="isMenuOpen = true"></button>
-      </div>
+    <!--    <Menu v-bind:is-open="isMenuOpen" @closed="isMenuOpen = false"></Menu>-->
+    <header class="header" v-if="needShowHeader" v-bind:class="{ 'header__with-back-button': needShowBackButton }">
+      <span class="header--back-arrow" v-if="needShowBackButton" @click="goBack()"></span>
+      <span>{{ routeTitle }}</span>
+      <!--      <button class="menu-button" @click="isMenuOpen = true"></button>-->
+      <button class="menu-button" v-if="needShowSettingsButton" @click="goToSettings()"></button>
     </header>
     <router-view/>
   </div>

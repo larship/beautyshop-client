@@ -77,16 +77,26 @@ select {
   }
 }
 
-header {
-  font-size: 14pt;
+.header {
+  display: grid;
+  grid-template-columns: 1fr 20px;
+  grid-column-gap: 15px;
+  margin-bottom: 10px;
   padding: @pageMargin;
   border-bottom: 1px solid #dddddd;
   box-shadow: 0px 1px 3px 0px rgba(150, 150, 150, 0.5);
-  margin-bottom: 10px;
+  font-size: 14pt;
+  align-items: center;
 
-  .header--title {
-    display: flex;
-    justify-content: space-between;
+  &__with-back-button {
+    grid-template-columns: 20px 1fr 20px;
+  }
+
+  &--back-arrow {
+    width: 24px;
+    height: 24px;
+    background-image: url("~@/assets/images/arrow-back.svg");
+
   }
 }
 
