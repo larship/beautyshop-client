@@ -2,13 +2,33 @@
   text-align: left;
   margin: @pageMargin;
   display: grid;
-  grid-template-rows: 55px 1fr 50px;
+  grid-template-rows: auto 1fr 50px;
   grid-row-gap: 15px;
   height: calc(100vh - @headerHeight - 20px);
+
+  &__no-map {
+    grid-template-rows: 1fr 50px;
+  }
 
   select {
     width: 100%;
     padding: 10px;
+  }
+
+  .info-common {
+    .info--phone {
+      display: inline-block;
+      padding: 4px 10px;
+      margin: 1px;
+      background-color: #f8f8f8;
+      border-radius: 5px;
+      border:  1px solid #c8c8c8;
+
+      a {
+        color: @textColor;
+        white-space: nowrap;
+      }
+    }
   }
 
   .info-map {
@@ -21,7 +41,7 @@
   .buttons-container {
     margin-top: 0px;
 
-    > button {
+    button {
       width: 100%;
     }
   }
