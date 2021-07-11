@@ -2,9 +2,10 @@ import BeautyshopWorker from '@/models/Worker';
 
 export default interface Beautyshop {
   uuid: string;
+  name: string;
   city: string;
   address: string;
-  name: string;
+  phones: string[] | null;
   coordinates: number[] | null;
   openHour: number;
   closeHour: number;
