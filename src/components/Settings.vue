@@ -1,6 +1,6 @@
 <template>
   <LocationChangeForm v-bind:is-open="isLocationChangeFormShow"
-                      @closed="isLocationChangeFormShow = false; closeMenu();"></LocationChangeForm>
+                      @closed="isLocationChangeFormShow = false;"></LocationChangeForm>
   <div class="settings-screen">
     <div class="settings-item" @click="isLocationChangeFormShow = true">Выбор города</div>
   </div>
