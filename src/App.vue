@@ -1,10 +1,8 @@
 <template>
   <div class="app-container">
-    <!--    <Menu v-bind:is-open="isMenuOpen" @closed="isMenuOpen = false"></Menu>-->
     <header class="header" v-if="needShowHeader" v-bind:class="{ 'header__with-back-button': needShowBackButton }">
       <span class="header--back-arrow" v-if="needShowBackButton" @click="goBack()"></span>
       <span>{{ routeTitle }}</span>
-      <!--      <button class="menu-button" @click="isMenuOpen = true"></button>-->
       <button class="menu-button" v-if="needShowSettingsButton" @click="goToSettings()"></button>
     </header>
     <router-view/>
@@ -15,11 +13,9 @@
 import { computed, defineComponent, ref, watch } from 'vue';
 import { useStore } from '@/store';
 import router from '@/router';
-// import Menu from '@/components/Menu.vue';
 import { RouteLocationNormalizedLoaded } from 'vue-router';
 
 export default defineComponent({
-  // components: {Menu},
   components: {},
   setup() {
     const isMenuOpen = ref(false);
